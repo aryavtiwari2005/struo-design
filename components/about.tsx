@@ -69,7 +69,7 @@ export default function About() {
               className="relative rounded-2xl overflow-hidden"
             >
               <Image
-                src="/about.webp"
+                src="/about.jpg"
                 alt="StruoIndia Office"
                 width={800}
                 height={600}
