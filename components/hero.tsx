@@ -64,7 +64,7 @@ export default function Hero() {
     <section
       id="home"
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-32" // Added pb-32 for space
+      className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-32"
     >
       {/* Background Elements */}
       <div className="absolute inset-0 z-0">
@@ -78,7 +78,7 @@ export default function Hero() {
         className="absolute inset-0 z-0 opacity-[0.03]"
         style={{
           backgroundImage:
-            "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+            "linear-gradient(to_right, currentColor 1px, transparent 1px), linear-gradient(to_bottom, currentColor 1px, transparent 1px)",
           backgroundSize: "4rem 4rem",
         }}
       ></div>
@@ -91,24 +91,23 @@ export default function Hero() {
             transition={{ delay: 0.2 }}
             className="inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-4"
           >
-            Leading Structural Engineering Consultancy
+            Welcome to StruoIndia Engineering Services
           </motion.div>
 
           <h1
             ref={textRef}
             className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight md:leading-tight"
           >
-            Building the <span className="text-gradient">Future</span> with
-            Structural Excellence
+            Precision, Partnership, Performance
           </h1>
 
           <p
             ref={subtitleRef}
             className="text-lg md:text-xl text-muted-foreground max-w-3xl"
           >
-            StruoIndia delivers comprehensive structural engineering solutions
-            with precision, reliability, and innovation, revolutionizing the
-            built environment.
+            Leading provider of structural steel detailing, connection design,
+            and BIM coordination services. Trusted by global clients for quality
+            and precision.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
@@ -127,12 +126,12 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Scroll Indicator - Positioned outside container */}
+      {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10" // Adjusted bottom-8
+        className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10"
       >
         <Link
           href="#about"

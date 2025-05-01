@@ -1,46 +1,69 @@
-"use client"
+// components/MagneticButton.tsx
+"use client";
 
-import type React from "react"
-
-import { useRef, useState, type ReactNode } from "react"
-import { motion } from "framer-motion"
+import { useRef, useEffect } from "react";
+import { motion } from "framer-motion";
+import gsap from "gsap";
 
 interface MagneticButtonProps {
-  children: ReactNode
-  strength?: number
+  children: React.ReactNode;
+  strength?: number;
 }
 
-export default function MagneticButton({ children, strength = 30 }: MagneticButtonProps) {
-  const buttonRef = useRef<HTMLDivElement>(null)
-  const [position, setPosition] = useState({ x: 0, y: 0 })
+const MagneticButton: React.FC<MagneticButtonProps> = ({
+  children,
+  strength = 50,
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!buttonRef.current) return
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
 
-    const { clientX, clientY } = e
-    const { left, top, width, height } = buttonRef.current.getBoundingClientRect()
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const distX = e.clientX - centerX;
+      const distY = e.clientY - centerY;
 
-    const x = (clientX - (left + width / 2)) / strength
-    const y = (clientY - (top + height / 2)) / strength
+      gsap.to(element, {
+        x: distX * (strength / 100),
+        y: distY * (strength / 100),
+        duration: 0.3,
+        ease: "power2.out",
+      });
+    };
 
-    setPosition({ x, y })
-  }
+    const handleMouseLeave = () => {
+      gsap.to(element, {
+        x: 0,
+        y: 0,
+        duration: 0.5,
+        ease: "elastic.out",
+      });
+    };
 
-  const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 })
-  }
+    element.addEventListener("mousemove", handleMouseMove);
+    element.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      element.removeEventListener("mousemove", handleMouseMove);
+      element.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [strength]);
 
   return (
     <motion.div
-      ref={buttonRef}
-      className="magnetic-target"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      ref={ref}
+      className="magnetic-target inline-block"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 150, damping: 15 }}
     >
       {children}
     </motion.div>
-  )
-}
+  );
+};
 
+export default MagneticButton;

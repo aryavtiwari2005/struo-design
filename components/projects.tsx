@@ -1,18 +1,15 @@
+// components/Projects.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MagneticButton from "./magnetic-button";
 
 export default function Projects() {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const projectsRef = useRef<HTMLDivElement>(null);
   const [activeProject, setActiveProject] = useState(0);
 
   const { scrollYProgress } = useScroll({
@@ -21,26 +18,6 @@ export default function Projects() {
   });
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    if (headingRef.current) {
-      gsap.from(headingRef.current.querySelectorAll(".gsap-reveal"), {
-        y: 50,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 80%",
-          end: "bottom 60%",
-          toggleActions: "play none none none",
-        },
-      });
-    }
-  }, []);
 
   const projects = [
     {
@@ -77,29 +54,26 @@ export default function Projects() {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative py-20 md:py-32 overflow-hidden"
+      className="relative py-20 md:py-32 overflow-hidden bg-background text-foreground"
     >
       <div className="container relative z-10 px-4 md:px-6">
-        <div
-          ref={headingRef}
-          className="text-center max-w-3xl mx-auto mb-16 md:mb-24"
-        >
-          <span className="inline-block text-sm font-medium text-primary mb-4 gsap-reveal">
+        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
+          <span className="inline-block text-sm font-medium text-primary mb-4 text-foreground">
             Our Projects
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 gsap-reveal">
-            Featured Structural Engineering Projects
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
+            Industry-Leading Tools
           </h2>
-          <p className="text-muted-foreground gsap-reveal">
-            Explore our portfolio of successful projects that showcase our
-            expertise and commitment to excellence.
+          <p className="text-muted-foreground">
+            We deploy the latest in 3D modeling and detailing software:{" "}
+            <span className="font-medium">Tekla Structures</span>,{" "}
+            <span className="font-medium">SDS/2</span>,{" "}
+            <span className="font-medium">AutoCAD</span>. Our drawings are
+            fabrication-ready, clash-free, and optimized for field execution.
           </p>
         </div>
 
-        <div
-          ref={projectsRef}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12"
-        >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
           {projects.map((project, index) => (
             <motion.div
               key={index}
@@ -124,7 +98,9 @@ export default function Projects() {
                 <span className="inline-block text-xs font-medium text-primary mb-2 bg-primary/10 px-3 py-1 rounded-full">
                   {project.category}
                 </span>
-                <h3 className="text-xl font-bold mb-2">{project.title}</h3>
+                <h3 className="text-xl font-bold mb-2 text-foreground">
+                  {project.title}
+                </h3>
                 <p className="text-sm text-muted-foreground mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {project.description}
                 </p>

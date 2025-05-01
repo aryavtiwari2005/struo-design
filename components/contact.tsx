@@ -1,19 +1,24 @@
+// components/Contact.tsx
 "use client";
 
-import type React from "react";
-
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Phone, Mail, Send, Loader2 } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Send,
+  Loader2,
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+} from "lucide-react";
 import MagneticButton from "./magnetic-button";
-import { Facebook, Twitter, Linkedin, Instagram } from "lucide-react";
 
-// Social media icons mapping
 const socialIcons = {
   facebook: Facebook,
   twitter: Twitter,
@@ -22,63 +27,20 @@ const socialIcons = {
 };
 
 export default function Contact() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-
-    if (headingRef.current) {
-      gsap.from(headingRef.current.querySelectorAll(".gsap-reveal"), {
-        y: 50,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 80%",
-          end: "bottom 60%",
-          toggleActions: "play none none none",
-        },
-      });
-    }
-
-    if (formRef.current) {
-      gsap.from(formRef.current.querySelectorAll(".form-element"), {
-        y: 30,
-        opacity: 0,
-        stagger: 0.1,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: formRef.current,
-          start: "top 80%",
-          end: "bottom 60%",
-          toggleActions: "play none none none",
-        },
-      });
-    }
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate form submission
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSubmitted(true);
 
-      // Reset form
-      if (formRef.current) {
-        formRef.current.reset();
-      }
+      const form = e.target as HTMLFormElement;
+      form.reset();
 
-      // Reset success message after 5 seconds
       setTimeout(() => {
         setIsSubmitted(false);
       }, 5000);
@@ -106,30 +68,29 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      ref={sectionRef}
-      className="relative py-20 md:py-32 overflow-hidden"
+      className="relative py-20 md:py-32 overflow-hidden bg-background text-foreground"
     >
       <div className="container relative z-10 px-4 md:px-6">
-        <div ref={headingRef} className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block text-sm font-medium text-primary mb-4 gsap-reveal">
+        <div className="text-center max-w-3xl mx-auto mb-16">
+          <span className="inline-block text-sm font-medium text-primary mb-4 text-foreground">
             Contact Us
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 gsap-reveal">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground">
             Get in Touch with Our Team
           </h2>
-          <p className="text-muted-foreground gsap-reveal">
-            Have questions or need a consultation? Reach out to us and
-            we&apos;ll get back to you as soon as possible.
+          <p className="text-muted-foreground">
+            Have questions or need a consultation? Reach out to us and we'll get
+            back to you as soon as possible.
           </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="order-2 lg:order-1">
-            <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
-              <div className="form-element">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium mb-2"
+                  className="block text-sm font-medium mb-2 text-foreground"
                 >
                   Full Name
                 </label>
@@ -137,14 +98,14 @@ export default function Contact() {
                   id="name"
                   placeholder="Enter your full name"
                   required
-                  className="rounded-lg"
+                  className="rounded-lg bg-background text-foreground border-border"
                 />
               </div>
 
-              <div className="form-element">
+              <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium mb-2"
+                  className="block text-sm font-medium mb-2 text-foreground"
                 >
                   Email Address
                 </label>
@@ -153,14 +114,14 @@ export default function Contact() {
                   type="email"
                   placeholder="Enter your email address"
                   required
-                  className="rounded-lg"
+                  className="rounded-lg bg-background text-foreground border-border"
                 />
               </div>
 
-              <div className="form-element">
+              <div>
                 <label
                   htmlFor="subject"
-                  className="block text-sm font-medium mb-2"
+                  className="block text-sm font-medium mb-2 text-foreground"
                 >
                   Subject
                 </label>
@@ -168,14 +129,14 @@ export default function Contact() {
                   id="subject"
                   placeholder="What is this regarding?"
                   required
-                  className="rounded-lg"
+                  className="rounded-lg bg-background text-foreground border-border"
                 />
               </div>
 
-              <div className="form-element">
+              <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium mb-2"
+                  className="block text-sm font-medium mb-2 text-foreground"
                 >
                   Message
                 </label>
@@ -184,11 +145,11 @@ export default function Contact() {
                   placeholder="Tell us about your project or inquiry"
                   rows={5}
                   required
-                  className="rounded-lg resize-none"
+                  className="rounded-lg bg-background text-foreground border-border resize-none"
                 />
               </div>
 
-              <div className="form-element">
+              <div>
                 <MagneticButton>
                   <Button
                     type="submit"
@@ -223,8 +184,10 @@ export default function Contact() {
           </div>
 
           <div className="order-1 lg:order-2">
-            <div className="glass rounded-2xl p-8">
-              <h3 className="text-xl font-bold mb-6">Contact Information</h3>
+            <div className="glass rounded-2xl p-8 text-foreground">
+              <h3 className="text-xl font-bold mb-6 text-foreground">
+                Contact Information
+              </h3>
 
               <div className="space-y-6">
                 {contactInfo.map((item, index) => (
@@ -233,7 +196,9 @@ export default function Contact() {
                       <item.icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>
-                      <h4 className="font-medium">{item.title}</h4>
+                      <h4 className="font-medium text-foreground">
+                        {item.title}
+                      </h4>
                       <p className="text-muted-foreground">{item.details}</p>
                     </div>
                   </div>
@@ -241,17 +206,16 @@ export default function Contact() {
               </div>
 
               <div className="mt-8">
-                <h4 className="font-medium mb-4">Follow Us</h4>
+                <h4 className="font-medium mb-4 text-foreground">Follow Us</h4>
                 <div className="flex space-x-4">
                   {["facebook", "twitter", "linkedin", "instagram"].map(
                     (social) => {
                       const IconComponent =
                         socialIcons[social as keyof typeof socialIcons];
-
                       return (
                         <MagneticButton key={social} strength={50}>
                           <a
-                            href={`#${social}`}
+                            href={`https://${social}.com`}
                             className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
                           >
                             <span className="sr-only">{social}</span>
@@ -264,20 +228,26 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="mt-8 pt-8 border-t">
-                <h4 className="font-medium mb-4">Business Hours</h4>
+              <div className="mt-8 pt-8 border-t border-border">
+                <h4 className="font-medium mb-4 text-foreground">
+                  Business Hours
+                </h4>
                 <ul className="space-y-2 text-muted-foreground">
                   <li className="flex justify-between">
-                    <span>Monday - Friday:</span>
-                    <span>9:00 AM - 6:00 PM</span>
+                    <span className="text-foreground">Monday - Friday:</span>
+                    <span className="text-muted-foreground">
+                      9:00 AM - 6:00 PM
+                    </span>
                   </li>
                   <li className="flex justify-between">
-                    <span>Saturday:</span>
-                    <span>10:00 AM - 4:00 PM</span>
+                    <span className="text-foreground">Saturday:</span>
+                    <span className="text-muted-foreground">
+                      10:00 AM - 4:00 PM
+                    </span>
                   </li>
                   <li className="flex justify-between">
-                    <span>Sunday:</span>
-                    <span>Closed</span>
+                    <span className="text-foreground">Sunday:</span>
+                    <span className="text-muted-foreground">Closed</span>
                   </li>
                 </ul>
               </div>
