@@ -109,18 +109,18 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 w-full h-24 z-50 transition-all duration-300 ${
-          isScrolled ? "glass py-2" : "py-4"
+        className={`fixed top-0 left-0 right-0 w-full h-16 md:h-24 z-50 transition-all duration-300 ${
+          isScrolled ? "glass py-2" : "py-2 md:py-4"
         }`}
       >
-        <div className="container mx-auto px-4 flex justify-between items-center">
+        <div className="container mx-auto px-2 sm:px-4 flex justify-between items-center">
           <Link href="/" className="flex items-center relative z-50">
             <Image
               src="/logo.png"
               alt="StruoIndia Logo"
               width={360}
               height={80}
-              className="h-12 md:h-20 w-auto"
+              className="h-10 md:h-20 w-auto"
               priority
             />
           </Link>
@@ -215,19 +215,19 @@ export default function Navbar() {
               exit="closed"
               className="fixed inset-0 z-40 bg-background/95 backdrop-blur-lg overflow-y-auto overflow-x-hidden"
             >
-              <div className="flex flex-col min-h-screen pt-32 pb-10 px-4 sm:px-6">
-                <nav className="flex flex-col space-y-8 items-center mt-16 w-full">
+              <div className="flex flex-col min-h-screen pt-16 pb-6 px-2 sm:px-4">
+                <nav className="flex flex-col space-y-4 items-center mt-8 w-full">
                   {navLinks.map((link) => (
                     <div key={link.name} className="w-full text-center">
                       {link.hasDropdown ? (
                         <div className="w-full flex flex-col items-center">
                           <button
                             onClick={() => setIsServicesOpen(!isServicesOpen)}
-                            className="text-2xl font-medium text-foreground hover:text-primary transition-colors duration-200 inline-flex items-center py-2"
+                            className="text-lg font-medium text-foreground hover:text-primary transition-colors duration-200 inline-flex items-center py-1"
                           >
                             {link.name}
                             <ChevronDown
-                              className={`ml-2 h-5 w-5 transition-transform ${
+                              className={`ml-2 h-4 w-4 transition-transform ${
                                 isServicesOpen ? "rotate-180" : ""
                               }`}
                             />
@@ -241,12 +241,12 @@ export default function Navbar() {
                             transition={{ duration: 0.3, ease: "easeInOut" }}
                             className="w-full overflow-hidden"
                           >
-                            <div className="flex flex-col items-center space-y-4 py-2">
+                            <div className="flex flex-col items-center space-y-2 py-2">
                               {link.dropdownItems?.map((item) => (
                                 <Link
                                   key={item.name}
                                   href={item.href}
-                                  className="text-xl font-medium text-foreground/80 hover:text-primary transition-colors duration-150 text-center w-full"
+                                  className="text-base font-medium text-foreground/80 hover:text-primary transition-colors duration-150 text-center w-full"
                                   onClick={closeMenu}
                                 >
                                   {item.name}
@@ -258,7 +258,7 @@ export default function Navbar() {
                       ) : (
                         <Link
                           href={link.href}
-                          className="text-2xl font-medium text-foreground hover:text-primary transition-colors duration-200 inline-block py-2 text-center w-full"
+                          className="text-lg font-medium text-foreground hover:text-primary transition-colors duration-200 inline-block py-1 text-center w-full"
                           onClick={closeMenu}
                         >
                           {link.name}
@@ -266,9 +266,9 @@ export default function Navbar() {
                       )}
                     </div>
                   ))}
-                  <div className="mt-8 w-full flex justify-center">
+                  <div className="mt-4 w-full flex justify-center">
                     <Button
-                      className="rounded-full text-white bg-struo-red hover:bg-struo-red/90 px-8 py-6 text-lg"
+                      className="rounded-full text-white bg-struo-red hover:bg-struo-red/90 px-6 py-4 text-base"
                       onClick={closeMenu}
                     >
                       Get in Touch
