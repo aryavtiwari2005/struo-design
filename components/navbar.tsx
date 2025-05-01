@@ -7,14 +7,19 @@ import { Menu, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import MagneticButton from "@/components/magnetic-button";
+import { createPortal } from "react-dom";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const servicesRef = useRef<HTMLDivElement | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Set isMounted to true when component mounts
+    setIsMounted(true);
+
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
@@ -38,19 +43,25 @@ export default function Navbar() {
     };
   }, []);
 
-  const toggleMenu = () => {
-    if (!isMenuOpen) {
+  useEffect(() => {
+    // Control body overflow based on menu state
+    if (isMenuOpen) {
       document.body.style.overflow = "hidden";
-      setIsMenuOpen(true);
     } else {
       document.body.style.overflow = "auto";
-      setIsMenuOpen(false);
-      setIsServicesOpen(false);
     }
+
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isMenuOpen]);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   const closeMenu = () => {
-    document.body.style.overflow = "auto";
     setIsMenuOpen(false);
     setIsServicesOpen(false);
   };
@@ -141,7 +152,7 @@ export default function Navbar() {
                     }`}
                   >
                     <div className="py-2">
-                      {link.dropdownItems.map((item) => (
+                      {link.dropdownItems?.map((item) => (
                         <Link
                           key={item.name}
                           href={item.href}
@@ -191,80 +202,84 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            variants={menuVariants}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-lg overflow-y-auto overflow-x-hidden"
-          >
-            <div className="flex flex-col min-h-screen pt-32 pb-10 px-4 sm:px-6">
-              <nav className="flex flex-col space-y-8 items-center mt-16 w-full">
-                {navLinks.map((link) => (
-                  <motion.div key={link.name} className="w-full text-center">
-                    {link.hasDropdown ? (
-                      <div className="w-full flex flex-col items-center">
-                        <button
-                          onClick={() => setIsServicesOpen(!isServicesOpen)}
-                          className="text-2xl font-medium text-foreground hover:text-primary transition-colors duration-200 inline-flex items-center py-2"
+      {/* Mobile Menu - Using Portal to avoid DOM hierarchy issues */}
+      {isMounted &&
+        isMenuOpen &&
+        createPortal(
+          <AnimatePresence mode="wait">
+            <motion.div
+              key="mobile-menu"
+              variants={menuVariants}
+              initial="closed"
+              animate="open"
+              exit="closed"
+              className="fixed inset-0 z-40 bg-background/95 backdrop-blur-lg overflow-y-auto overflow-x-hidden"
+            >
+              <div className="flex flex-col min-h-screen pt-32 pb-10 px-4 sm:px-6">
+                <nav className="flex flex-col space-y-8 items-center mt-16 w-full">
+                  {navLinks.map((link) => (
+                    <div key={link.name} className="w-full text-center">
+                      {link.hasDropdown ? (
+                        <div className="w-full flex flex-col items-center">
+                          <button
+                            onClick={() => setIsServicesOpen(!isServicesOpen)}
+                            className="text-2xl font-medium text-foreground hover:text-primary transition-colors duration-200 inline-flex items-center py-2"
+                          >
+                            {link.name}
+                            <ChevronDown
+                              className={`ml-2 h-5 w-5 transition-transform ${
+                                isServicesOpen ? "rotate-180" : ""
+                              }`}
+                            />
+                          </button>
+
+                          <motion.div
+                            animate={{
+                              height: isServicesOpen ? "auto" : 0,
+                              opacity: isServicesOpen ? 1 : 0,
+                            }}
+                            transition={{ duration: 0.3, ease: "easeInOut" }}
+                            className="w-full overflow-hidden"
+                          >
+                            <div className="flex flex-col items-center space-y-4 py-2">
+                              {link.dropdownItems?.map((item) => (
+                                <Link
+                                  key={item.name}
+                                  href={item.href}
+                                  className="text-xl font-medium text-foreground/80 hover:text-primary transition-colors duration-150 text-center w-full"
+                                  onClick={closeMenu}
+                                >
+                                  {item.name}
+                                </Link>
+                              ))}
+                            </div>
+                          </motion.div>
+                        </div>
+                      ) : (
+                        <Link
+                          href={link.href}
+                          className="text-2xl font-medium text-foreground hover:text-primary transition-colors duration-200 inline-block py-2 text-center w-full"
+                          onClick={closeMenu}
                         >
                           {link.name}
-                          <ChevronDown
-                            className={`ml-2 h-5 w-5 transition-transform ${
-                              isServicesOpen ? "rotate-180" : ""
-                            }`}
-                          />
-                        </button>
-
-                        <motion.div
-                          animate={{
-                            height: isServicesOpen ? "auto" : 0,
-                            opacity: isServicesOpen ? 1 : 0,
-                          }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                          className="w-full overflow-hidden"
-                        >
-                          <div className="flex flex-col items-center space-y-4 py-2">
-                            {link.dropdownItems.map((item) => (
-                              <Link
-                                key={item.name}
-                                href={item.href}
-                                className="text-xl font-medium text-foreground/80 hover:text-primary transition-colors duration-150 text-center w-full"
-                                onClick={closeMenu}
-                              >
-                                {item.name}
-                              </Link>
-                            ))}
-                          </div>
-                        </motion.div>
-                      </div>
-                    ) : (
-                      <Link
-                        href={link.href}
-                        className="text-2xl font-medium text-foreground hover:text-primary transition-colors duration-200 inline-block py-2 text-center w-full"
-                        onClick={closeMenu}
-                      >
-                        {link.name}
-                      </Link>
-                    )}
-                  </motion.div>
-                ))}
-                <motion.div className="mt-8 w-full flex justify-center">
-                  <Button
-                    className="rounded-full text-white bg-struo-red hover:bg-struo-red/90 px-8 py-6 text-lg"
-                    onClick={closeMenu}
-                  >
-                    Get in Touch
-                  </Button>
-                </motion.div>
-              </nav>
-            </div>
-          </motion.div>
+                        </Link>
+                      )}
+                    </div>
+                  ))}
+                  <div className="mt-8 w-full flex justify-center">
+                    <Button
+                      className="rounded-full text-white bg-struo-red hover:bg-struo-red/90 px-8 py-6 text-lg"
+                      onClick={closeMenu}
+                    >
+                      Get in Touch
+                    </Button>
+                  </div>
+                </nav>
+              </div>
+            </motion.div>
+          </AnimatePresence>,
+          document.body
         )}
-      </AnimatePresence>
     </>
   );
 }
