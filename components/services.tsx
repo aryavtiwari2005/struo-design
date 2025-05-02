@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import type { TouchEvent as ReactTouchEvent } from "react";
 import {
   Wrench,
   LinkIcon,
@@ -17,6 +18,10 @@ import { motion } from "framer-motion";
 
 export default function Services() {
   const [activeIndex, setActiveIndex] = useState(0);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const minSwipeDistance = 50; // Minimum distance required for a swipe
 
   const services = [
     {
@@ -76,6 +81,54 @@ export default function Services() {
   const prevService = () => {
     setActiveIndex((prev) => (prev === 0 ? services.length - 1 : prev - 1));
   };
+
+  // Handle touch events for swiping
+  const handleTouchStart = (e: React.TouchEvent | TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent | TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    const distance = touchStartX.current - touchEndX.current;
+
+    // Check if the swipe distance is significant enough
+    if (Math.abs(distance) > minSwipeDistance) {
+      if (distance > 0) {
+        // Swiped left, go to next
+        nextService();
+      } else {
+        // Swiped right, go to previous
+        prevService();
+      }
+    }
+  };
+
+  // Add touch event listeners to the carousel container
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    if (carousel) {
+      const touchStartHandler = (e: TouchEvent) => handleTouchStart(e);
+      const touchMoveHandler = (e: TouchEvent) => handleTouchMove(e);
+      const touchEndHandler = () => handleTouchEnd();
+
+      carousel.addEventListener("touchstart", touchStartHandler, {
+        passive: true,
+      });
+      carousel.addEventListener("touchmove", touchMoveHandler, {
+        passive: true,
+      });
+      carousel.addEventListener("touchend", touchEndHandler, { passive: true });
+
+      return () => {
+        carousel.removeEventListener("touchstart", touchStartHandler);
+        carousel.removeEventListener("touchmove", touchMoveHandler);
+        carousel.removeEventListener("touchend", touchEndHandler);
+      };
+    }
+  }, []);
 
   // Variants for framer-motion animations
   const containerVariants = {
@@ -150,28 +203,13 @@ export default function Services() {
           ))}
         </motion.div>
 
-        {/* Mobile View: Carousel */}
+        {/* Mobile View: Swipeable Carousel */}
         <div className="md:hidden relative mb-8">
-          {/* Navigation buttons */}
-          <div className="flex justify-between absolute top-1/2 -translate-y-1/2 w-full px-2 z-20">
-            <button
-              onClick={prevService}
-              className="w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center border border-border/50"
-              aria-label="Previous service"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button
-              onClick={nextService}
-              className="w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm flex items-center justify-center border border-border/50"
-              aria-label="Next service"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Carousel container */}
-          <div className="relative h-[320px] overflow-hidden rounded-2xl">
+          {/* Swipeable Carousel container */}
+          <div
+            ref={carouselRef}
+            className="relative h-[250px] overflow-hidden rounded-2xl touch-pan-y cursor-grab active:cursor-grabbing"
+          >
             {services.map((service, index) => (
               <motion.div
                 key={index}
@@ -206,8 +244,13 @@ export default function Services() {
             ))}
           </div>
 
+          {/* Swipe hint message */}
+          <div className="text-center text-xs text-muted-foreground mt-3 mb-1">
+            <span>← Swipe to navigate →</span>
+          </div>
+
           {/* Pagination dots */}
-          <div className="flex justify-center gap-2 mt-4">
+          <div className="flex justify-center gap-2 mt-1">
             {services.map((_, index) => (
               <button
                 key={index}
