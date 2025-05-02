@@ -147,7 +147,7 @@ export default function Services() {
   return (
     <section
       id="services"
-      className="relative min-h-screen bg-background text-foreground flex items-center"
+      className="relative min-h-screen bg-background text-foreground flex items-center py-10 md:py-10"
       data-section="services"
     >
       <div className="absolute inset-0 z-0 opacity-[0.03] bg-[linear-gradient(to_right,_currentColor_1px,_transparent_1px),_linear-gradient(to_bottom,_currentColor_1px,_transparent_1px)] bg-[size:2rem_2rem]"></div>

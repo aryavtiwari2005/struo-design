@@ -32,7 +32,7 @@ export default function Hero() {
     <section
       id="home"
       ref={heroRef}
-      className="relative min-h-screen flex items-center justify-center pt-20 pb-32"
+      className="relative min-h-screen flex items-center justify-center pt-32 pb-32"
     >
       <div className="container relative z-10 px-4 md:px-6">
         <motion.div

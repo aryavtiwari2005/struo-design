@@ -1,8 +1,7 @@
 // app/services/page.tsx
 "use client";
 
-import { useEffect, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,118 +15,85 @@ import {
   BarChart3,
   Lightbulb,
 } from "lucide-react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import MagneticButton from "@/components/magnetic-button";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 
+// Dynamically import heavy libraries
+import dynamic from "next/dynamic";
+
+// Lazy load non-critical components
+const MagneticButton = dynamic(() => import("@/components/magnetic-button"), {
+  ssr: false,
+  loading: () => <div className="magnetic-btn-placeholder" />,
+});
+
 export default function Services() {
-  const sectionRef = useRef<HTMLElement>(null);
+  // Use native Intersection Observer instead of GSAP
   const heroRef = useRef<HTMLDivElement>(null);
   const servicesRef = useRef<HTMLDivElement>(null);
   const processRef = useRef<HTMLDivElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const parallax = useTransform(scrollYProgress, [0, 1], [0, -300]);
-  const rotateLeft = useTransform(scrollYProgress, [0, 1], [0, -10]);
-  const rotateRight = useTransform(scrollYProgress, [0, 1], [0, 10]);
+  const [heroInView, setHeroInView] = useState(false);
+  const [servicesInView, setServicesInView] = useState(false);
+  const [processInView, setProcessInView] = useState(false);
+  const [ctaInView, setCtaInView] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    const options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.1,
+    };
 
-    gsap.registerPlugin(ScrollTrigger);
-
-    // Hero animation
-    if (heroRef.current) {
-      gsap.fromTo(
-        heroRef.current.querySelectorAll(".gsap-reveal"),
-        { y: 100, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.2,
-          duration: 1.2,
-          ease: "power4.out",
-          scrollTrigger: {
-            trigger: heroRef.current,
-            start: "top 85%",
-            end: "bottom 60%",
-            toggleActions: "play none none none",
-          },
+    const observerCallback = (
+      entries: IntersectionObserverEntry[],
+      observer: IntersectionObserver
+    ) => {
+      entries.forEach((entry: IntersectionObserverEntry) => {
+        if (entry.target === heroRef.current && entry.isIntersecting) {
+          setHeroInView(true);
+          observer.unobserve(entry.target);
+        } else if (
+          entry.target === servicesRef.current &&
+          entry.isIntersecting
+        ) {
+          setServicesInView(true);
+          observer.unobserve(entry.target);
+        } else if (
+          entry.target === processRef.current &&
+          entry.isIntersecting
+        ) {
+          setProcessInView(true);
+          observer.unobserve(entry.target);
+        } else if (entry.target === ctaRef.current && entry.isIntersecting) {
+          setCtaInView(true);
+          observer.unobserve(entry.target);
         }
-      );
-    }
+      });
+    };
 
-    // Services animation
-    if (servicesRef.current) {
-      gsap.fromTo(
-        servicesRef.current.querySelectorAll(".service-item"),
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.15,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: servicesRef.current,
-            start: "top 80%",
-            end: "bottom 60%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    }
+    const observer = new IntersectionObserver(observerCallback, options);
 
-    // Process animation
-    if (processRef.current) {
-      gsap.fromTo(
-        processRef.current.querySelectorAll(".process-item"),
-        { y: 40, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.15,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: processRef.current,
-            start: "top 80%",
-            end: "bottom 60%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    }
-
-    // CTA animation
-    if (ctaRef.current) {
-      gsap.fromTo(
-        ctaRef.current,
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ctaRef.current,
-            start: "top 85%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    }
+    if (heroRef.current) observer.observe(heroRef.current);
+    if (servicesRef.current) observer.observe(servicesRef.current);
+    if (processRef.current) observer.observe(processRef.current);
+    if (ctaRef.current) observer.observe(ctaRef.current);
 
     return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      if (heroRef.current) observer.unobserve(heroRef.current);
+      if (servicesRef.current) observer.unobserve(servicesRef.current);
+      if (processRef.current) observer.unobserve(processRef.current);
+      if (ctaRef.current) observer.unobserve(ctaRef.current);
     };
+  }, []);
+
+  // Implement image loading strategy
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+  useEffect(() => {
+    // Set images as loaded after a short delay to prevent layout shift
+    const timer = setTimeout(() => setImagesLoaded(true), 300);
+    return () => clearTimeout(timer);
   }, []);
 
   const services = [
@@ -135,12 +101,12 @@ export default function Services() {
       icon: Wrench,
       title: "Structural Steel Detailing",
       description:
-        "End-to-end detailing including anchor bolt plans, GA drawings, shop drawings, and erection plans using Tekla Structures and SDS/2.",
+        "End-to-end detailing including anchor bolt plans, GA drawings, shop drawings, and erection plans.",
       features: [
-        "Anchor bolt and foundation plans",
+        "Anchor bolt plans",
         "General arrangement drawings",
         "Fabrication shop drawings",
-        "Erection plans and marking plans",
+        "Erection plans",
       ],
       bgColor: "bg-struo-red/5 hover:bg-struo-red/10",
       borderColor: "border-struo-red/20",
@@ -148,9 +114,9 @@ export default function Services() {
     },
     {
       icon: Building,
-      title: "Pre-Engineered Building (PEB) Detailing",
+      title: "Pre-Engineered Building Detailing",
       description:
-        "Accurate PEB detailing for primary and secondary framing, roof/wall panels, trims, and accessories.",
+        "Accurate PEB detailing for primary and secondary framing, roof/wall panels, and accessories.",
       features: [
         "Primary & secondary framing",
         "Roof & wall panels",
@@ -163,9 +129,9 @@ export default function Services() {
     },
     {
       icon: LinkIcon,
-      title: "Connection Design and Analysis",
+      title: "Connection Design",
       description:
-        "Expert connection design as per AISC, CSA, and IS standards with a focus on stability and constructability.",
+        "Expert connection design as per AISC, CSA, and IS standards with focus on stability.",
       features: [
         "AISC, CSA & IS compliance",
         "Structural analysis",
@@ -180,7 +146,7 @@ export default function Services() {
       icon: BarChart3,
       title: "Material Take-off (ABM)",
       description:
-        "Quantity estimations and Advance Bill of Materials to streamline procurement and budgeting.",
+        "Quantity estimations and Advance Bill of Materials to streamline procurement.",
       features: [
         "Detailed material lists",
         "Cost optimization",
@@ -193,9 +159,9 @@ export default function Services() {
     },
     {
       icon: Layers,
-      title: "BIM Coordination & 3D Modeling",
+      title: "BIM Coordination",
       description:
-        "Clash detection, coordination with architects and MEP, and LOD-400 compliant outputs.",
+        "Clash detection, coordination with architects and MEP, and LOD-400 compliance.",
       features: [
         "Clash detection",
         "Multi-discipline coordination",
@@ -210,12 +176,12 @@ export default function Services() {
       icon: FileText,
       title: "Fabrication Shop Drawings",
       description:
-        "Fabricator-friendly, CNC-compatible shop drawings designed for error-free production.",
+        "Fabricator-friendly, CNC-compatible shop drawings for error-free production.",
       features: [
         "CNC-compatible outputs",
         "Production-ready details",
         "Fabrication optimization",
-        "Clear assembly instructions",
+        "Assembly instructions",
       ],
       bgColor: "bg-orange-500/5 hover:bg-orange-500/10",
       borderColor: "border-orange-500/20",
@@ -225,7 +191,7 @@ export default function Services() {
       icon: Lightbulb,
       title: "Value Engineering",
       description:
-        "Reduce costs without compromising safety or performance with our smart engineering solutions.",
+        "Reduce costs without compromising safety with our smart engineering solutions.",
       features: [
         "Cost reduction strategies",
         "Material optimization",
@@ -243,45 +209,51 @@ export default function Services() {
       number: "01",
       title: "Project Analysis",
       description:
-        "We analyze your project requirements, specifications, and constraints to develop a tailored approach.",
+        "We analyze your project requirements, specifications, and constraints.",
     },
     {
       number: "02",
       title: "Concept Development",
       description:
-        "Our team creates initial concepts and proposed solutions based on project requirements.",
+        "Our team creates initial concepts based on project requirements.",
     },
     {
       number: "03",
       title: "Detailed Engineering",
-      description:
-        "We develop comprehensive detailed drawings and models with precision and accuracy.",
+      description: "We develop comprehensive detailed drawings with precision.",
     },
     {
       number: "04",
       title: "Quality Assurance",
-      description:
-        "Multi-level quality checks ensure error-free deliverables that meet all standards and requirements.",
+      description: "Multi-level quality checks ensure error-free deliverables.",
     },
     {
       number: "05",
       title: "Client Review",
-      description:
-        "We collaborate with you to review deliverables and implement any requested changes.",
+      description: "We collaborate with you to review and implement changes.",
     },
     {
       number: "06",
       title: "Final Delivery",
       description:
-        "Timely delivery of complete documentation with ongoing support throughout your project.",
+        "Timely delivery with ongoing support throughout your project.",
     },
   ];
 
   const stats = [
-    { value: "2000+", label: "Projects Completed" },
-    { value: "100+", label: "Global Clients" },
-    { value: "20+", label: "Years Experience" },
-    { value: "100%", label: "Client Satisfaction" },
+    { value: "2000+", label: "Projects" },
+    { value: "100+", label: "Clients" },
+    { value: "20+", label: "Years" },
+    { value: "100%", label: "Satisfaction" },
+  ];
+
+  // Lazy load software icons
+  const softwareTools = [
+    { name: "Tekla Structures", src: "/tekla-logo.svg" },
+    { name: "SDS/2", src: "/sds2-logo.svg" },
+    { name: "AutoCAD", src: "/autocad-logo.svg" },
+    { name: "Revit", src: "/revit-logo.svg" },
+    { name: "STAAD.Pro", src: "/staad-logo.svg" },
   ];
 
   return (
@@ -289,85 +261,88 @@ export default function Services() {
       <Navbar />
       <section
         id="services"
-        ref={sectionRef}
-        className="relative pt-24 pb-32 md:pt-32 md:pb-40 overflow-hidden bg-background text-foreground"
+        className="relative pt-20 pb-24 md:pt-28 md:pb-32 overflow-hidden bg-background text-foreground"
       >
-        {/* Background Decorative Elements */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute top-0 left-0 w-[60%] h-[60%] bg-primary/5 rounded-full blur-3xl opacity-70" />
-          <div className="absolute bottom-0 right-0 w-[50%] h-[50%] bg-secondary/5 rounded-full blur-3xl opacity-70" />
-          <div className="absolute top-1/3 right-1/4 w-[40%] h-[40%] bg-struo-red/5 rounded-full blur-3xl opacity-50" />
-          <div className="absolute inset-0 opacity-[0.03] bg-[linear-gradient(to_right,_currentColor_1px,_transparent_1px),_linear-gradient(to_bottom,_currentColor_1px,_transparent_1px)] bg-[size:4rem_4rem]"></div>
-        </div>
+        {/* Simplified Background - only render on desktop */}
+        {typeof window !== "undefined" && window.innerWidth > 768 && (
+          <div className="absolute inset-0 z-0">
+            <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-primary/5 rounded-full blur-3xl opacity-70" />
+            <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-secondary/5 rounded-full blur-3xl opacity-70" />
+          </div>
+        )}
 
-        <div className="container relative z-10 px-6 md:px-8">
-          {/* Hero Section */}
-          <div ref={heroRef} className="relative mb-32">
+        <div className="container relative z-10 px-4 md:px-6">
+          {/* Hero Section - with animations only when in view */}
+          <div ref={heroRef} className="relative mb-20 md:mb-28">
             <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center space-x-2 mb-4 gsap-reveal">
-                <div className="h-1 w-8 bg-struo-red rounded-full"></div>
+              <div
+                className={`inline-flex items-center space-x-2 mb-4 transition-opacity duration-700 ${
+                  heroInView ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                <div className="h-1 w-6 bg-struo-red rounded-full"></div>
                 <span className="text-sm font-semibold text-primary uppercase tracking-wide">
                   Our Services
                 </span>
-                <div className="h-1 w-8 bg-struo-red rounded-full"></div>
+                <div className="h-1 w-6 bg-struo-red rounded-full"></div>
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-extrabold leading-tight text-foreground mb-6 gsap-reveal">
+              <h1
+                className={`text-3xl md:text-5xl font-extrabold leading-tight text-foreground mb-4 transition-all duration-700 ${
+                  heroInView
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
+                }`}
+              >
                 Our Expertise,{" "}
                 <span className="text-struo-red">Your Competitive Edge</span>
               </h1>
 
-              <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-8 gsap-reveal max-w-3xl mx-auto">
+              <p
+                className={`text-base md:text-lg text-muted-foreground leading-relaxed mb-6 max-w-3xl mx-auto transition-all duration-700 delay-100 ${
+                  heroInView
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
+                }`}
+              >
                 StruoIndia offers a complete suite of structural engineering
-                services that support efficient, accurate, and cost-effective
-                project execution.
+                services for efficient, accurate, and cost-effective projects.
               </p>
 
-              <div className="flex flex-wrap justify-center gap-4 gsap-reveal">
-                <MagneticButton>
-                  <Button
-                    size="lg"
-                    className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-8 py-6 text-lg"
-                  >
-                    Get a Quote
-                    <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-2" />
-                  </Button>
-                </MagneticButton>
-                <MagneticButton>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-8 py-6 text-lg"
-                  >
-                    View Portfolio
-                  </Button>
-                </MagneticButton>
+              <div
+                className={`flex flex-wrap justify-center gap-4 transition-all duration-700 delay-200 ${
+                  heroInView
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
+                }`}
+              >
+                <Button
+                  size="lg"
+                  className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-6 py-5"
+                >
+                  Get a Quote
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6 py-5"
+                >
+                  View Portfolio
+                </Button>
               </div>
-            </div>
-
-            {/* Decorative elements */}
-            <div className="hidden lg:block">
-              <motion.div
-                style={{ y: parallax, rotate: rotateLeft }}
-                className="absolute -top-10 -left-10 w-48 h-48 bg-struo-red/5 rounded-3xl blur-xl"
-              ></motion.div>
-              <motion.div
-                style={{ y: parallax, rotate: rotateRight }}
-                className="absolute -bottom-20 -right-20 w-64 h-64 bg-primary/5 rounded-3xl blur-xl"
-              ></motion.div>
             </div>
           </div>
 
-          {/* Stats Section */}
-          <div className="relative mb-32 py-12 px-8 bg-secondary/20 rounded-3xl border border-border/20">
-            <div className="absolute inset-0 bg-gradient-to-r from-struo-red/5 to-primary/5 rounded-3xl opacity-50"></div>
-            <div className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* Stats Section - Simplified */}
+          <div className="relative mb-20 md:mb-28 py-8 px-4 md:px-6 bg-secondary/20 rounded-2xl border border-border/20">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-3xl md:text-5xl font-bold text-foreground mb-2">
+                  <div className="text-2xl md:text-4xl font-bold text-foreground mb-1">
                     {stat.value}
                   </div>
-                  <div className="text-sm md:text-base text-muted-foreground">
+                  <div className="text-xs md:text-sm text-muted-foreground">
                     {stat.label}
                   </div>
                 </div>
@@ -375,266 +350,248 @@ export default function Services() {
             </div>
           </div>
 
-          {/* Services Grid */}
-          <div ref={servicesRef} className="mb-32">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <div className="h-1 w-8 bg-struo-red rounded-full"></div>
+          {/* Services Grid - with lazy loading */}
+          <div ref={servicesRef} className="mb-20 md:mb-28">
+            <div className="max-w-3xl mx-auto text-center mb-12">
+              <div className="inline-flex items-center space-x-2 mb-3">
+                <div className="h-1 w-6 bg-struo-red rounded-full"></div>
                 <span className="text-sm font-semibold text-primary uppercase tracking-wide">
                   Core Services
                 </span>
-                <div className="h-1 w-8 bg-struo-red rounded-full"></div>
+                <div className="h-1 w-6 bg-struo-red rounded-full"></div>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground service-item">
+              <h2
+                className={`text-2xl md:text-3xl font-bold text-foreground transition-all duration-500 ${
+                  servicesInView ? "opacity-100" : "opacity-0"
+                }`}
+              >
                 Comprehensive Engineering Solutions
               </h2>
-              <p className="mt-4 text-lg text-muted-foreground service-item max-w-2xl mx-auto">
-                Our specialized services are designed to meet the unique needs
-                of each project, ensuring precision, efficiency, and compliance.
+              <p
+                className={`mt-3 text-base text-muted-foreground max-w-2xl mx-auto transition-all duration-500 delay-100 ${
+                  servicesInView ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                Our specialized services meet the unique needs of each project
+                with precision.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {services.map((service, index) => (
-                <motion.div
+                <div
                   key={index}
-                  className={`service-item ${service.bgColor} p-8 rounded-2xl shadow-md border ${service.borderColor} transition-all duration-300 h-full flex flex-col`}
-                  whileHover={{
-                    y: -10,
-                    boxShadow:
-                      "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-                  }}
+                  className={`${
+                    service.bgColor
+                  } p-6 rounded-xl shadow-sm border ${
+                    service.borderColor
+                  } transition-all duration-300 h-full flex flex-col transform ${
+                    servicesInView
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-4"
+                  }`}
+                  style={{ transitionDelay: `${100 + index * 50}ms` }}
                 >
                   <div
-                    className={`w-14 h-14 rounded-2xl ${service.iconBg} flex items-center justify-center mb-6`}
+                    className={`w-12 h-12 rounded-xl ${service.iconBg} flex items-center justify-center mb-4`}
                   >
-                    <service.icon className="h-7 w-7 text-foreground" />
+                    <service.icon className="h-6 w-6 text-foreground" />
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3 text-foreground">
+                  <h3 className="text-lg font-bold mb-2 text-foreground">
                     {service.title}
                   </h3>
-                  <p className="text-muted-foreground mb-6">
+                  <p className="text-sm text-muted-foreground mb-4">
                     {service.description}
                   </p>
 
                   <div className="mt-auto">
-                    <ul className="space-y-2">
+                    <ul className="space-y-1.5">
                       {service.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start">
-                          <CheckCircle2 className="h-5 w-5 text-struo-red mr-2 flex-shrink-0 mt-0.5" />
-                          <span className="text-sm text-muted-foreground">
+                          <CheckCircle2 className="h-4 w-4 text-struo-red mr-1.5 flex-shrink-0 mt-0.5" />
+                          <span className="text-xs text-muted-foreground">
                             {feature}
                           </span>
                         </li>
                       ))}
                     </ul>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Process Section */}
-          <div ref={processRef} className="mb-32">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <div className="h-1 w-8 bg-struo-red rounded-full"></div>
+          {/* Process Section - simplified animation */}
+          <div ref={processRef} className="mb-20 md:mb-28">
+            <div className="max-w-3xl mx-auto text-center mb-12">
+              <div className="inline-flex items-center space-x-2 mb-3">
+                <div className="h-1 w-6 bg-struo-red rounded-full"></div>
                 <span className="text-sm font-semibold text-primary uppercase tracking-wide">
                   Our Process
                 </span>
-                <div className="h-1 w-8 bg-struo-red rounded-full"></div>
+                <div className="h-1 w-6 bg-struo-red rounded-full"></div>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground process-item">
+              <h2
+                className={`text-2xl md:text-3xl font-bold text-foreground transition-all duration-500 ${
+                  processInView ? "opacity-100" : "opacity-0"
+                }`}
+              >
                 How We Deliver Excellence
               </h2>
-              <p className="mt-4 text-lg text-muted-foreground process-item max-w-2xl mx-auto">
-                Our structured approach ensures quality, efficiency, and clear
-                communication at every stage.
+              <p
+                className={`mt-3 text-base text-muted-foreground max-w-2xl mx-auto transition-all duration-500 delay-100 ${
+                  processInView ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                Our structured approach ensures quality at every stage.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {processSteps.map((step, index) => (
-                <motion.div
+                <div
                   key={index}
-                  className="process-item bg-secondary/10 hover:bg-secondary/20 p-8 rounded-2xl border border-border/20 transition-all duration-300"
-                  whileHover={{
-                    y: -5,
-                    boxShadow:
-                      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
-                  }}
+                  className={`bg-secondary/10 hover:bg-secondary/15 p-6 rounded-xl border border-border/20 transition-all duration-300 transform ${
+                    processInView
+                      ? "opacity-100 translate-y-0"
+                      : "opacity-0 translate-y-4"
+                  }`}
+                  style={{ transitionDelay: `${100 + index * 50}ms` }}
                 >
-                  <div className="flex items-center mb-4">
-                    <span className="text-4xl font-bold text-struo-red/20">
+                  <div className="flex items-center mb-3">
+                    <span className="text-3xl font-bold text-struo-red/20">
                       {step.number}
                     </span>
-                    <div className="h-px flex-grow bg-border/30 mx-4"></div>
+                    <div className="h-px flex-grow bg-border/30 mx-3"></div>
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3 text-foreground">
+                  <h3 className="text-lg font-bold mb-2 text-foreground">
                     {step.title}
                   </h3>
-                  <p className="text-muted-foreground">{step.description}</p>
-                </motion.div>
+                  <p className="text-sm text-muted-foreground">
+                    {step.description}
+                  </p>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Image Showcase */}
-          <div className="mb-32 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="rounded-2xl overflow-hidden h-80 relative">
-              <Image
-                src="/services-1.jpg"
-                alt="Structural Steel Project"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    Industrial Steel Structures
-                  </h3>
-                  <p className="text-white/80 text-sm">
-                    Precision engineering for complex industrial facilities
-                  </p>
+          {/* Image Showcase - Optimized */}
+          {imagesLoaded && (
+            <div className="mb-20 md:mb-28 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="rounded-xl overflow-hidden h-64 relative">
+                <Image
+                  src="/services-1.jpg"
+                  alt="Structural Steel Project"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                  loading="lazy"
+                  placeholder="blur"
+                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent flex items-end">
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-white mb-1">
+                      Industrial Steel Structures
+                    </h3>
+                    <p className="text-white/80 text-xs">
+                      Precision engineering for complex industrial facilities
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-xl overflow-hidden h-64 relative">
+                <Image
+                  src="/services-2.jpg"
+                  alt="3D BIM Model"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                  loading="lazy"
+                  placeholder="blur"
+                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent flex items-end">
+                  <div className="p-4">
+                    <h3 className="text-lg font-bold text-white mb-1">
+                      Advanced BIM Modeling
+                    </h3>
+                    <p className="text-white/80 text-xs">
+                      Detailed 3D coordination for seamless project execution
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
+          )}
 
-            <div className="rounded-2xl overflow-hidden h-80 relative">
-              <Image
-                src="/services-2.jpg"
-                alt="3D BIM Model"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent flex items-end">
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">
-                    Advanced BIM Modeling
-                  </h3>
-                  <p className="text-white/80 text-sm">
-                    Detailed 3D coordination for seamless project execution
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Software & Tools */}
-          <div className="mb-32">
-            <div className="max-w-3xl mx-auto text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
+          {/* Software & Tools - Lazy loaded */}
+          <div className="mb-20 md:mb-28">
+            <div className="max-w-3xl mx-auto text-center mb-8">
+              <h2 className="text-xl md:text-2xl font-bold text-foreground mb-3">
                 Advanced Tools & Technologies
               </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                We leverage industry-leading software to deliver precise and
-                efficient solutions.
+              <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+                We leverage industry-leading software to deliver precise
+                solutions.
               </p>
             </div>
 
-            <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
-                  <Image
-                    src="/tekla-logo.svg"
-                    alt="Tekla Structures"
-                    width={48}
-                    height={48}
-                  />
+            <div className="flex flex-wrap justify-center items-center gap-6 md:gap-12">
+              {softwareTools.map((tool, index) => (
+                <div key={index} className="text-center">
+                  <div className="w-16 h-16 mx-auto bg-secondary/20 rounded-lg flex items-center justify-center mb-2">
+                    <Image
+                      src={tool.src}
+                      alt={tool.name}
+                      width={36}
+                      height={36}
+                      loading="lazy"
+                    />
+                  </div>
+                  <p className="text-xs font-medium">{tool.name}</p>
                 </div>
-                <p className="text-sm font-medium">Tekla Structures</p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
-                  <Image
-                    src="/sds2-logo.svg"
-                    alt="SDS/2"
-                    width={48}
-                    height={48}
-                  />
-                </div>
-                <p className="text-sm font-medium">SDS/2</p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
-                  <Image
-                    src="/autocad-logo.svg"
-                    alt="AutoCAD"
-                    width={48}
-                    height={48}
-                  />
-                </div>
-                <p className="text-sm font-medium">AutoCAD</p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
-                  <Image
-                    src="/revit-logo.svg"
-                    alt="Revit"
-                    width={48}
-                    height={48}
-                  />
-                </div>
-                <p className="text-sm font-medium">Revit</p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
-                  <Image
-                    src="/staad-logo.svg"
-                    alt="STAAD.Pro"
-                    width={48}
-                    height={48}
-                  />
-                </div>
-                <p className="text-sm font-medium">STAAD.Pro</p>
-              </div>
+              ))}
             </div>
           </div>
 
-          {/* CTA Section */}
+          {/* CTA Section - Simplified */}
           <div
             ref={ctaRef}
-            className="bg-gradient-to-r from-struo-red/10 to-primary/10 rounded-3xl p-12 border border-border/20 relative overflow-hidden"
+            className={`bg-gradient-to-r from-struo-red/10 to-primary/10 rounded-xl p-8 border border-border/20 relative overflow-hidden transition-all duration-700 ${
+              ctaInView
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-8"
+            }`}
           >
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-struo-red/10 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
-
             <div className="relative z-10 max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-6">
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
                 Ready to Start Your Next Project?
               </h2>
 
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Our team of experts is ready to bring your structural steel
-                vision to life. Contact us today for a consultation and discover
-                how our services can benefit your project.
+              <p className="text-sm md:text-base text-muted-foreground mb-6 max-w-2xl mx-auto">
+                Our team is ready to bring your structural steel vision to life.
+                Contact us today.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <MagneticButton>
-                  <Button
-                    size="lg"
-                    className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-8"
-                  >
-                    Request a Quote
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </MagneticButton>
-                <MagneticButton>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-8"
-                  >
-                    View Our Portfolio
-                  </Button>
-                </MagneticButton>
+                <Button
+                  size="lg"
+                  className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-6"
+                >
+                  Request a Quote
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
+                >
+                  View Our Portfolio
+                </Button>
               </div>
             </div>
           </div>

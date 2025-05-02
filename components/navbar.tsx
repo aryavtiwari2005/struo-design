@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import MagneticButton from "@/components/magnetic-button";
@@ -152,6 +152,14 @@ export default function Navbar() {
                     }`}
                   >
                     <div className="py-2">
+                      <Link
+                        href={link.href}
+                        className="block px-4 py-3 text-sm font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-colors duration-150 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center"
+                        onClick={() => setIsServicesOpen(false)}
+                      >
+                        View All Services
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </Link>
                       {link.dropdownItems?.map((item) => (
                         <Link
                           key={item.name}
@@ -242,6 +250,14 @@ export default function Navbar() {
                             className="w-full overflow-hidden"
                           >
                             <div className="flex flex-col items-center space-y-2 py-2">
+                              <Link
+                                href={link.href}
+                                className="text-base font-medium text-foreground hover:text-primary transition-colors duration-150 inline-flex items-center justify-center w-full border-b border-gray-200 dark:border-gray-700 pb-2 mb-1"
+                                onClick={closeMenu}
+                              >
+                                View All Services
+                                <ArrowRight className="h-4 w-4 ml-2" />
+                              </Link>
                               {link.dropdownItems?.map((item) => (
                                 <Link
                                   key={item.name}

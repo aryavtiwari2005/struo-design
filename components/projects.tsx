@@ -58,7 +58,7 @@ export default function Projects() {
     <section
       id="projects"
       ref={sectionRef}
-      className="relative bg-background text-foreground"
+      className="relative py-10 md:py-10 bg-background text-foreground"
     >
       <div className="container relative z-10 px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24">
