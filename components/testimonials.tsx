@@ -47,7 +47,7 @@ export default function Achievements() {
   return (
     <section
       id="achievements"
-      className="relative py-20 md:py-32 bg-background text-foreground"
+      className="relative py-10 md:py-10 bg-background text-foreground"
     >
       <div className="container relative z-10 px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
