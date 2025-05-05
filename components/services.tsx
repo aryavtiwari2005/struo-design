@@ -15,6 +15,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 export default function Services() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -273,13 +274,15 @@ export default function Services() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="text-center"
         >
-          <Button
-            size="lg"
-            className="rounded-full bg-struo-red hover:bg-struo-red/90 text-white px-6 py-3 text-sm md:text-base"
-          >
-            View All Services
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Button>
+          <Link href="/services">
+            <Button
+              size="lg"
+              className="rounded-full bg-struo-red hover:bg-struo-red/90 text-white px-6 py-3 text-sm md:text-base"
+            >
+              View All Services
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Button>
+          </Link>
         </motion.div>
       </div>
     </section>

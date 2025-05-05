@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import MagneticButton from "./magnetic-button";
+import Link from "next/link";
 
 export default function Projects() {
   const sectionRef = useRef(null);
@@ -122,13 +123,15 @@ export default function Projects() {
 
         <div className="mt-16 text-center">
           <MagneticButton>
-            <Button
-              size="lg"
-              className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white"
-            >
-              View All Projects
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Button>
+            <Link href="/projects">
+              <Button
+                size="lg"
+                className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white"
+              >
+                View All Projects
+                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </Link>
           </MagneticButton>
         </div>
       </div>

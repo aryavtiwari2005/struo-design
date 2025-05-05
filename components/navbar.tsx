@@ -83,7 +83,6 @@ export default function Navbar() {
       ],
     },
     { name: "Projects", href: "/projects" },
-    { name: "Contact", href: "/contact" },
   ];
 
   // Animation variants for the mobile menu
@@ -283,12 +282,14 @@ export default function Navbar() {
                     </div>
                   ))}
                   <div className="mt-4 w-full flex justify-center">
-                    <Button
-                      className="rounded-full text-white bg-struo-red hover:bg-struo-red/90 px-6 py-4 text-base"
-                      onClick={closeMenu}
-                    >
-                      Get in Touch
-                    </Button>
+                    <Link href="/contact">
+                      <Button
+                        className="rounded-full text-white bg-struo-red hover:bg-struo-red/90 px-6 py-4 text-base"
+                        onClick={closeMenu}
+                      >
+                        Get in Touch
+                      </Button>
+                    </Link>
                   </div>
                 </nav>
               </div>

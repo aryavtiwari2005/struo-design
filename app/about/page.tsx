@@ -8,6 +8,7 @@ import { ArrowRight, Globe, Award, Building, Users, Zap } from "lucide-react";
 import MagneticButton from "@/components/magnetic-button";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import Link from "next/link";
 
 // Fade in animation variants
 const fadeInVariants = {
@@ -181,13 +182,15 @@ export default function About() {
 
               <motion.div className="pt-4" variants={fadeInVariants}>
                 <MagneticButton>
-                  <Button
-                    size="lg"
-                    className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-6 py-5 text-base"
-                  >
-                    Discover Our Services
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Button>
+                  <Link href="/services">
+                    <Button
+                      size="lg"
+                      className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-6 py-5 text-base"
+                    >
+                      Discover Our Services
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
+                  </Link>
                 </MagneticButton>
               </motion.div>
             </motion.div>
@@ -326,13 +329,15 @@ export default function About() {
 
               <div className="flex justify-center">
                 <MagneticButton>
-                  <Button
-                    variant="outline"
-                    className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
-                  >
-                    Contact Us Today
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
+                  <Link href="/contact">
+                    <Button
+                      variant="outline"
+                      className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
+                    >
+                      Contact Us Today
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </Link>
                 </MagneticButton>
               </div>
             </div>
@@ -484,12 +489,14 @@ export default function About() {
                 </Button>
               </MagneticButton>
               <MagneticButton>
-                <Button
-                  variant="outline"
-                  className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
-                >
-                  Contact Our Team
-                </Button>
+                <Link href="/contact">
+                  <Button
+                    variant="outline"
+                    className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
+                  >
+                    Contact Our Team
+                  </Button>
+                </Link>
               </MagneticButton>
             </div>
           </motion.div>

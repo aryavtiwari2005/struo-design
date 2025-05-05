@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Globe, Clock, Map, Wrench } from "lucide-react";
+import Link from "next/link";
 
 export default function About() {
   const sectionRef = useRef(null);
@@ -56,10 +57,12 @@ export default function About() {
               industry.
             </p>
             <div className="mt-8">
-              <Button className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-6 py-3">
-                Learn More
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
+              <Link href="/about">
+                <Button className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-6 py-3">
+                  Learn More
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
             </div>
           </div>
 

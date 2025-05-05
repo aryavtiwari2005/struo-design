@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import Link from "next/link";
 
 // Dynamically import heavy libraries
 import dynamic from "next/dynamic";
@@ -547,12 +548,12 @@ export default function Contact() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Still have questions? Our team is ready to help.
                 </p>
-                <Button
+                {/* <Button
                   variant="outline"
                   className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
                 >
                   View More FAQs
-                </Button>
+                </Button> */}
               </div>
             </div>
           </div>
@@ -570,20 +571,22 @@ export default function Contact() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
+                {/* <Button
                   size="lg"
                   className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-6"
                 >
                   Schedule a Consultation
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
-                >
-                  Explore Our Services
-                </Button>
+                </Button> */}
+                <Link href="/services">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
+                  >
+                    Explore Our Services
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

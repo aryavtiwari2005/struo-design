@@ -29,30 +29,30 @@ export default function Footer() {
         { name: "About Us", href: "/about" },
         { name: "Services", href: "/services" },
         { name: "Projects", href: "/projects" },
-        { name: "Careers", href: "/careers" },
         { name: "Contact", href: "/contact" },
       ],
     },
     {
       title: "Services",
       links: [
-        { name: "Steel Design", href: "/services#steel-design" },
-        { name: "Connection Design", href: "/services#connection-design" },
-        { name: "Material Take-off", href: "/services#material-takeoff" },
-        { name: "Customized Reports", href: "/services#reports" },
-        { name: "Consulting", href: "/services#consulting" },
+        { name: "BIM Coordination", href: "/services/bim-coordination" },
+        { name: "Connection Design", href: "/services/connection-design" },
+        {
+          name: "Structural Steel Detailing",
+          href: "/services/structural-steel-detailing",
+        },
       ],
     },
-    {
-      title: "Resources",
-      links: [
-        { name: "Blog", href: "/blog" },
-        { name: "Case Studies", href: "/case-studies" },
-        { name: "Whitepapers", href: "/whitepapers" },
-        { name: "FAQs", href: "/faqs" },
-        { name: "Support", href: "/support" },
-      ],
-    },
+    // {
+    //   title: "Resources",
+    //   links: [
+    //     { name: "Blog", href: "/blog" },
+    //     { name: "Case Studies", href: "/case-studies" },
+    //     { name: "Whitepapers", href: "/whitepapers" },
+    //     { name: "FAQs", href: "/faqs" },
+    //     { name: "Support", href: "/support" },
+    //   ],
+    // },
   ];
 
   return (

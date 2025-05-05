@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import Link from "next/link";
 
 // Dynamically import heavy libraries
 import dynamic from "next/dynamic";
@@ -309,7 +310,7 @@ export default function Services() {
                 services for efficient, accurate, and cost-effective projects.
               </p>
 
-              <div
+              {/* <div
                 className={`flex flex-wrap justify-center gap-4 transition-all duration-700 delay-200 ${
                   heroInView
                     ? "opacity-100 translate-y-0"
@@ -330,7 +331,7 @@ export default function Services() {
                 >
                   View Portfolio
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -585,13 +586,15 @@ export default function Services() {
                   Request a Quote
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
-                >
-                  View Our Portfolio
-                </Button>
+                <Link href="/contact">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
+                  >
+                    Contact Our Team
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

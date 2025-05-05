@@ -19,6 +19,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MagneticButton from "@/components/magnetic-button";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import Link from "next/link";
 
 export default function BIMCoordination() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -376,7 +377,7 @@ export default function BIMCoordination() {
                 Resolve issues virtually to save time and money on-site.
               </p>
 
-              <div className="flex flex-wrap justify-center gap-4 gsap-reveal">
+              {/* <div className="flex flex-wrap justify-center gap-4 gsap-reveal">
                 <MagneticButton>
                   <Button
                     size="lg"
@@ -395,7 +396,7 @@ export default function BIMCoordination() {
                     View Case Studies
                   </Button>
                 </MagneticButton>
-              </div>
+              </div> */}
             </div>
 
             {/* Decorative elements */}
@@ -711,13 +712,15 @@ export default function BIMCoordination() {
                   </Button>
                 </MagneticButton>
                 <MagneticButton>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-8"
-                  >
-                    View BIM Case Studies
-                  </Button>
+                  <Link href="/contact">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-8"
+                    >
+                      Contact Our Team
+                    </Button>
+                  </Link>
                 </MagneticButton>
               </div>
             </div>

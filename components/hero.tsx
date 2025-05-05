@@ -68,15 +68,19 @@ export default function Hero() {
             className="flex flex-col sm:flex-row gap-4 mt-8"
           >
             <MagneticButton>
-              <Button size="lg" className="rounded-full group">
-                Our Services
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Button>
+              <Link href="/services">
+                <Button size="lg" className="rounded-full group">
+                  Our Services
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
             </MagneticButton>
             <MagneticButton>
-              <Button size="lg" variant="outline" className="rounded-full">
-                View Projects
-              </Button>
+              <Link href="/projects">
+                <Button size="lg" variant="outline" className="rounded-full">
+                  View Projects
+                </Button>
+              </Link>
             </MagneticButton>
           </motion.div>
         </motion.div>

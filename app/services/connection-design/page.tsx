@@ -19,6 +19,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import MagneticButton from "@/components/magnetic-button";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import Link from "next/link";
 
 export default function ConnectionDesignPage() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -356,7 +357,7 @@ export default function ConnectionDesignPage() {
                 with ease of fabrication.
               </p>
 
-              <div className="flex flex-wrap justify-center gap-4 gsap-reveal">
+              {/* <div className="flex flex-wrap justify-center gap-4 gsap-reveal">
                 <MagneticButton>
                   <Button
                     size="lg"
@@ -375,7 +376,7 @@ export default function ConnectionDesignPage() {
                     View Sample Projects
                   </Button>
                 </MagneticButton>
-              </div>
+              </div> */}
             </div>
 
             {/* Decorative elements */}
@@ -658,13 +659,15 @@ export default function ConnectionDesignPage() {
                   </Button>
                 </MagneticButton>
                 <MagneticButton>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-8"
-                  >
-                    View Our Portfolio
-                  </Button>
+                  <Link href="/contact">
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-8"
+                    >
+                      Contact Our Team
+                    </Button>
+                  </Link>
                 </MagneticButton>
               </div>
             </div>
