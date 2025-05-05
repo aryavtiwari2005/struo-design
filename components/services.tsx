@@ -246,9 +246,9 @@ export default function Services() {
           </div>
 
           {/* Swipe hint message */}
-          <div className="text-center text-xs text-muted-foreground mt-3 mb-1">
+          {/* <div className="text-center text-xs text-muted-foreground mt-3 mb-1">
             <span>← Swipe to navigate →</span>
-          </div>
+          </div> */}
 
           {/* Pagination dots */}
           <div className="flex justify-center gap-2 mt-1">

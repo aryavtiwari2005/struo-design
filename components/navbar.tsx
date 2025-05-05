@@ -184,9 +184,11 @@ export default function Navbar() {
               )
             )}
             <MagneticButton>
-              <Button className="rounded-full text-white bg-struo-red hover:bg-struo-red/90">
-                Get in Touch
-              </Button>
+              <Link href="/contact">
+                <Button className="rounded-full text-white bg-struo-red hover:bg-struo-red/90">
+                  Get in Touch
+                </Button>
+              </Link>
             </MagneticButton>
           </nav>
 
