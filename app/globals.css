@@ -6,18 +6,23 @@
 @layer base {
   :root {
     /* Dark theme only */
-    --background: 240 10% 3.9%; /* Dark gray */
-    --foreground: 0 0% 98%; /* White */
+    --background: 240 10% 3.9%;
+    /* Dark gray */
+    --foreground: 0 0% 98%;
+    /* White */
     --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 72% 51%; /* Red */
+    --primary: 0 72% 51%;
+    /* Red */
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 3.7% 15.9%; /* Darker gray */
+    --secondary: 240 3.7% 15.9%;
+    /* Darker gray */
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%; /* Light gray */
+    --muted-foreground: 240 5% 64.9%;
+    /* Light gray */
     --accent: 240 3.7% 15.9%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
@@ -26,7 +31,8 @@
     --input: 240 3.7% 15.9%;
     --ring: 0 72% 51%;
     --radius: 0.5rem;
-    --struo-red: #ff3e3e; /* Matches tailwind.config.js */
+    --struo-red: #ff3e3e;
+    /* Matches tailwind.config.js */
     --struo-darkgray: #222222;
     --struo-lightgray: #999999;
     --struo-silver: #d0d0d0;
@@ -75,6 +81,7 @@
 }
 
 @layer utilities {
+
   /* Glassmorphism */
   .glass {
     @apply bg-background/90 backdrop-blur-md border-border/50;
@@ -97,9 +104,11 @@
     0% {
       background-position: 0% 50%;
     }
+
     50% {
       background-position: 100% 50%;
     }
+
     100% {
       background-position: 0% 50%;
     }
@@ -116,6 +125,7 @@
     0% {
       background-position: 200% 0;
     }
+
     100% {
       background-position: -200% 0;
     }
@@ -160,4 +170,105 @@ html.lenis {
   .glass {
     @apply backdrop-blur-sm;
   }
+}
+
+
+.tiptap,
+.ProseMirror {
+  background-color: white !important;
+  color: black !important;
+}
+
+/* Ensure Tiptap menu buttons and dropdowns have dark text */
+.tiptap button,
+.ProseMirror button,
+.tiptap-menu-bar button,
+.tiptap-menu-bar svg {
+  color: #374151 !important;
+  /* gray-700 */
+}
+
+/* Style the placeholder */
+.tiptap p.is-editor-empty:first-child::before,
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #6b7280;
+  /* gray-500 */
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Ensure editor content is styled correctly */
+.tiptap p,
+.ProseMirror p {
+  margin: 0 0 1em 0;
+  color: black !important;
+}
+
+.tiptap h1,
+.tiptap h2,
+.tiptap h3,
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3 {
+  color: black !important;
+}
+
+.tiptap a,
+.ProseMirror a {
+  color: #2563eb;
+  /* blue-600 */
+  text-decoration: underline;
+}
+
+.tiptap ul,
+.tiptap ol,
+.ProseMirror ul,
+.ProseMirror ol {
+  margin: 1em 0;
+  padding-left: 2em;
+}
+
+.tiptap img,
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure dropdowns have dark text */
+.tiptap-menu-bar .dropdown,
+.tiptap-menu-bar .dropdown button,
+.tiptap-menu-bar .dropdown span {
+  color: #374151 !important;
+  /* gray-700 */
+  background-color: white !important;
+}
+
+.blog-form {
+  overflow-y: scroll !important;
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db #f3f4f6;
+  /* thumb: gray-300, track: gray-100 */
+}
+
+/* Webkit scrollbar styles */
+.blog-form::-webkit-scrollbar {
+  width: 8px;
+}
+
+.blog-form::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  /* gray-100 */
+}
+
+.blog-form::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  /* gray-300 */
+  border-radius: 4px;
+}
+
+.blog-form::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+  /* gray-400 */
 }

@@ -83,6 +83,7 @@ export default function Navbar() {
       ],
     },
     { name: "Projects", href: "/projects" },
+    { name: "Blogs", href: "/blogs" },
   ];
 
   // Animation variants for the mobile menu
@@ -108,9 +109,8 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 w-full h-16 md:h-24 z-50 transition-all duration-300 ${
-          isScrolled ? "glass py-2" : "py-2 md:py-4"
-        }`}
+        className={`fixed top-0 left-0 right-0 w-full h-16 md:h-24 z-50 transition-all duration-300 ${isScrolled ? "glass py-2" : "py-2 md:py-4"
+          }`}
       >
         <div className="container mx-auto px-2 sm:px-4 flex justify-between items-center">
           <Link href="/" className="flex items-center relative z-50">
@@ -136,19 +136,17 @@ export default function Navbar() {
                     >
                       {link.name}
                       <ChevronDown
-                        className={`ml-1 h-4 w-4 transition-transform ${
-                          isServicesOpen ? "rotate-180" : ""
-                        }`}
+                        className={`ml-1 h-4 w-4 transition-transform ${isServicesOpen ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
                   </MagneticButton>
 
                   <div
-                    className={`absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-background/95 backdrop-blur-md ring-1 ring-black ring-opacity-5 z-50 transition-all duration-200 ${
-                      isServicesOpen
+                    className={`absolute left-0 mt-2 w-64 rounded-md shadow-lg bg-background/95 backdrop-blur-md ring-1 ring-black ring-opacity-5 z-50 transition-all duration-200 ${isServicesOpen
                         ? "opacity-100 translate-y-0 pointer-events-auto"
                         : "opacity-0 translate-y-2 pointer-events-none"
-                    }`}
+                      }`}
                   >
                     <div className="py-2">
                       <Link
@@ -236,9 +234,8 @@ export default function Navbar() {
                           >
                             {link.name}
                             <ChevronDown
-                              className={`ml-2 h-4 w-4 transition-transform ${
-                                isServicesOpen ? "rotate-180" : ""
-                              }`}
+                              className={`ml-2 h-4 w-4 transition-transform ${isServicesOpen ? "rotate-180" : ""
+                                }`}
                             />
                           </button>
 
