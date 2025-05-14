@@ -5,7 +5,7 @@ export async function middleware(req: NextRequest) {
     console.log('Middleware triggered:', req.nextUrl.pathname);
 
     // Define protected routes
-    const protectedRoutes = ['/admin/blogs'];
+    const protectedRoutes = ['/admin'];
 
     // Initialize a Supabase client specifically for middleware
     const res = NextResponse.next();
@@ -32,5 +32,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/admin/blogs', '/adminlogin'],
+    matcher: ['/admin', '/adminlogin'],
 };

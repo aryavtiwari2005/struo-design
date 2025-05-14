@@ -1,4 +1,3 @@
-// components/Contact.tsx
 "use client";
 
 import { useState } from "react";
@@ -18,6 +17,7 @@ import {
   Instagram,
 } from "lucide-react";
 import MagneticButton from "./magnetic-button";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const socialIcons = {
   facebook: Facebook,
@@ -27,41 +27,65 @@ const socialIcons = {
 };
 
 export default function Contact() {
+  const supabase = createClientComponentClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      service: formData.get("service") as string,
+      message: formData.get("message") as string,
+      terms_accepted: formData.get("terms") === "on",
+    };
+
+    try {
+      const { error } = await supabase.from("contact_struo").insert([data]);
+
+      if (error) {
+        console.error("Error submitting form:", error);
+        setError("Failed to submit your request. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
       setIsSubmitted(true);
-
-      const form = e.target as HTMLFormElement;
-      form.reset();
+      (e.target as HTMLFormElement).reset();
 
       setTimeout(() => {
         setIsSubmitted(false);
       }, 5000);
-    }, 1500);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
     {
       icon: MapPin,
       title: "Our Location",
-      details: "123 Business Park, New Delhi, India",
+      details: `Canada: 2704 Eagle Mountain Drive, Abbotsford, British Columbia - V3G0C4 
+                India: A-45, Kanchan Kunj, Mandanpur Khadar Extn-2, New Delhi - 110076`,
     },
     {
       icon: Phone,
       title: "Phone Number",
-      details: "+91 98765 43210",
+      details: "+1-236-380-5141, +91-8130238433",
     },
     {
       icon: Mail,
       title: "Email Address",
-      details: "info@struoindia.com",
+      details: "detailing@struoindia.com",
     },
   ];
 
@@ -87,15 +111,17 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="order-2 lg:order-1">
             <form onSubmit={handleSubmit} className="space-y-6">
+              {error && <p className="text-red-500">{error}</p>}
               <div>
                 <label
                   htmlFor="name"
                   className="block text-sm font-medium mb-2 text-foreground"
                 >
-                  Full Name
+                  Full Name <span className="text-struo-red">*</span>
                 </label>
                 <Input
                   id="name"
+                  name="name"
                   placeholder="Enter your full name"
                   required
                   className="rounded-lg bg-background text-foreground border-border"
@@ -107,10 +133,11 @@ export default function Contact() {
                   htmlFor="email"
                   className="block text-sm font-medium mb-2 text-foreground"
                 >
-                  Email Address
+                  Email Address <span className="text-struo-red">*</span>
                 </label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="Enter your email address"
                   required
@@ -120,17 +147,30 @@ export default function Contact() {
 
               <div>
                 <label
-                  htmlFor="subject"
+                  htmlFor="service"
                   className="block text-sm font-medium mb-2 text-foreground"
                 >
-                  Subject
+                  Service Required <span className="text-struo-red">*</span>
                 </label>
-                <Input
-                  id="subject"
-                  placeholder="What is this regarding?"
+                <select
+                  id="service"
+                  name="service"
                   required
-                  className="rounded-lg bg-background text-foreground border-border"
-                />
+                  defaultValue=""
+                  className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition text-foreground"
+                >
+                  <option value="" disabled>
+                    Select a service
+                  </option>
+                  <option value="steel-detailing">Structural Steel Detailing</option>
+                  <option value="peb">Pre-Engineered Building Detailing</option>
+                  <option value="connection-design">Connection Design</option>
+                  <option value="material-takeoff">Material Take-off (ABM)</option>
+                  <option value="bim">BIM Coordination</option>
+                  <option value="shop-drawings">Fabrication Shop Drawings</option>
+                  <option value="value-engineering">Value Engineering</option>
+                  <option value="other">Other</option>
+                </select>
               </div>
 
               <div>
@@ -138,15 +178,41 @@ export default function Contact() {
                   htmlFor="message"
                   className="block text-sm font-medium mb-2 text-foreground"
                 >
-                  Message
+                  Message <span className="text-struo-red">*</span>
                 </label>
                 <Textarea
                   id="message"
+                  name="message"
                   placeholder="Tell us about your project or inquiry"
                   rows={5}
                   required
                   className="rounded-lg bg-background text-foreground border-border resize-none"
                 />
+              </div>
+
+              <div className="flex items-start">
+                <input
+                  id="terms"
+                  name="terms"
+                  type="checkbox"
+                  required
+                  className="mt-1 focus:ring-struo-red"
+                />
+                <label
+                  htmlFor="terms"
+                  className="ml-2 text-xs text-muted-foreground"
+                >
+                  I agree to the{" "}
+                  <a href="#" className="text-struo-red hover:underline">
+                    Terms & Conditions
+                  </a>{" "}
+                  and acknowledge that my information will be processed in
+                  accordance with the{" "}
+                  <a href="#" className="text-struo-red hover:underline">
+                    Privacy Policy
+                  </a>
+                  .
+                </label>
               </div>
 
               <div>
@@ -228,7 +294,7 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="mt-8 pt-8 border-t border-border">
+              {/* <div className="mt-8 pt-8 border-t border-border">
                 <h4 className="font-medium mb-4 text-foreground">
                   Business Hours
                 </h4>
@@ -250,7 +316,7 @@ export default function Contact() {
                     <span className="text-muted-foreground">Closed</span>
                   </li>
                 </ul>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

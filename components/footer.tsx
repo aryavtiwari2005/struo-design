@@ -116,11 +116,11 @@ export default function Footer() {
           ))}
         </div>
         <div className="pt-8 border-t border-border/50">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-6">
             <div className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} StruoIndia. All rights reserved.
             </div>
-            <div className="flex flex-wrap gap-4 text-sm">
+            {/* <div className="flex flex-wrap gap-4 text-sm">
               <Link
                 href="/privacy-policy"
                 className="text-muted-foreground hover:text-primary transition-colors duration-200"
@@ -145,8 +145,8 @@ export default function Footer() {
               >
                 Sitemap
               </Link>
-            </div>
-            <div className="flex items-center flex-wrap justify-center">
+            </div> */}
+            {/* <div className="flex items-center flex-wrap justify-center">
               <span className="text-sm text-muted-foreground mr-2 mb-2 md:mb-0">
                 Subscribe to our newsletter
               </span>
@@ -160,7 +160,7 @@ export default function Footer() {
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

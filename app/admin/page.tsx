@@ -5,13 +5,14 @@ import { useRouter } from "next/navigation";
 import BlogTable from "@/components/admin/BlogTable";
 import BlogForm from "@/components/admin/BlogForm";
 import ContactRequestsTable from "@/components/admin/ContactRequestsTable";
+import ContactRequestModal from "@/components/admin/ContactRequestModal";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { supabase } from "@/utils/supabase";
 
-interface Blog {
+export interface Blog {
     id: string;
     title: string;
     slug: string;
@@ -20,7 +21,7 @@ interface Blog {
     created_at: string;
 }
 
-interface ContactRequest {
+export interface ContactRequest {
     id: string;
     name: string;
     email: string;
@@ -62,6 +63,8 @@ export default function AdminBlogs() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [authLoading, setAuthLoading] = useState(true);
     const [error, setError] = useState<string>("");
+    const [selectedRequest, setSelectedRequest] = useState<ContactRequest | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -123,7 +126,8 @@ export default function AdminBlogs() {
                     }
 
                     // Fetch contact requests
-                    const { data: requestData, error: requestError } = await supabase.from("contact_struo")
+                    const { data: requestData, error: requestError } = await supabase
+                        .from("contact_struo")
                         .select("*")
                         .order("created_at", { ascending: false });
 
@@ -308,6 +312,16 @@ export default function AdminBlogs() {
         }
     };
 
+    const handleViewDetails = (request: ContactRequest) => {
+        setSelectedRequest(request);
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedRequest(null);
+        setIsModalOpen(false);
+    };
+
     const handleClose = () => {
         setBlogForm({ title: "", slug: "", content: "", image: null, imageUrl: null });
         setShowForm(false);
@@ -407,10 +421,16 @@ export default function AdminBlogs() {
                             requests={contactRequests}
                             onUpdateStatus={handleUpdateStatus}
                             onDelete={handleDeleteRequest}
+                            onViewDetails={handleViewDetails}
                         />
                     </div>
                 </div>
             </section>
+            <ContactRequestModal
+                request={selectedRequest}
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+            />
             <Footer />
         </motion.div>
     );

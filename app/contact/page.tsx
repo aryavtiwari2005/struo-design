@@ -127,7 +127,7 @@ export default function Contact() {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+91 98765 43210", "+91 12345 67890"],
+      details: ["+1-236-380-5141", "+91-8130238433"],
       bgColor: "bg-struo-red/5 hover:bg-struo-red/10",
       borderColor: "border-struo-red/20",
       iconBg: "bg-struo-red/10",
@@ -135,7 +135,7 @@ export default function Contact() {
     {
       icon: Mail,
       title: "Email",
-      details: ["info@struoindia.com", "sales@struoindia.com"],
+      details: ["detailing@struoindia.com"],
       bgColor: "bg-blue-500/5 hover:bg-blue-500/10",
       borderColor: "border-blue-500/20",
       iconBg: "bg-blue-500/10",
@@ -143,21 +143,10 @@ export default function Contact() {
     {
       icon: MapPin,
       title: "Office",
-      details: ["123 Engineering Hub, Sector 5", "Delhi NCR, India - 201301"],
+      details: ["Canada: 2704 Eagle Mountain Drive, Abbotsford, British Columbia - V3G0C4", "India: A-45, Kanchan Kunj, Mandanpur Khadar Extn-2, New Delhi - 110076"],
       bgColor: "bg-green-500/5 hover:bg-green-500/10",
       borderColor: "border-green-500/20",
       iconBg: "bg-green-500/10",
-    },
-    {
-      icon: Clock,
-      title: "Hours",
-      details: [
-        "Monday - Friday: 9:00 AM - 6:00 PM",
-        "Saturday: 10:00 AM - 2:00 PM",
-      ],
-      bgColor: "bg-purple-500/5 hover:bg-purple-500/10",
-      borderColor: "border-purple-500/20",
-      iconBg: "bg-purple-500/10",
     },
   ];
 

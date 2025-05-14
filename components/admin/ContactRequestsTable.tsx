@@ -1,26 +1,17 @@
-interface ContactRequest {
-    id: string;
-    name: string;
-    email: string;
-    phone: string | null;
-    company: string | null;
-    service: string;
-    message: string;
-    terms_accepted: boolean;
-    created_at: string;
-    status: string;
-}
+import { ContactRequest } from "@/app/admin/page";
 
 interface ContactRequestsTableProps {
     requests: ContactRequest[];
     onUpdateStatus: (id: string, status: string) => void;
     onDelete: (id: string) => void;
+    onViewDetails: (request: ContactRequest) => void;
 }
 
 export default function ContactRequestsTable({
     requests,
     onUpdateStatus,
     onDelete,
+    onViewDetails,
 }: ContactRequestsTableProps) {
     return (
         <div className="overflow-x-auto">
@@ -58,6 +49,12 @@ export default function ContactRequestsTable({
                                 {new Date(request.created_at).toLocaleDateString()}
                             </td>
                             <td className="px-4 py-3 space-x-2">
+                                <button
+                                    onClick={() => onViewDetails(request)}
+                                    className="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                                >
+                                    View Details
+                                </button>
                                 <button
                                     onClick={() => onDelete(request.id)}
                                     className="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"

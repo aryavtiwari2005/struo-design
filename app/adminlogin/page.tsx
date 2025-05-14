@@ -20,7 +20,7 @@ export default function AdminLogin() {
             if (session) {
                 // Already logged in, redirect to admin
                 console.log("User already logged in, redirecting to admin");
-                router.push("/admin/blogs");
+                router.push("/admin");
             }
         }
         checkSession();
@@ -48,7 +48,7 @@ export default function AdminLogin() {
                 router.refresh();
 
                 // Redirect to admin page
-                router.push("/admin/blogs");
+                router.push("/admin");
             } else {
                 throw new Error("Failed to create session");
             }
