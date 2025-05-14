@@ -311,11 +311,11 @@ export default function ConnectionDesignPage() {
   ];
 
   const codeComplianceIcons = [
-    { name: "AISC", image: "/aisc-logo.svg" },
-    { name: "CSA", image: "/csa-logo.svg" },
-    { name: "IS", image: "/is-logo.svg" },
-    { name: "IBC", image: "/ibc-logo.svg" },
-    { name: "Eurocode", image: "/eurocode-logo.svg" },
+    { name: "AISC", image: "/aisc.jpg" },
+    { name: "CSA", image: "/csa.webp" },
+    { name: "IS", image: "/IS.jpeg" },
+    { name: "IBC", image: "/IBC.jpg" },
+    { name: "Eurocode", image: "/eurocodes.jpeg" },
   ];
 
   return (
@@ -523,7 +523,7 @@ export default function ConnectionDesignPage() {
           >
             <div className="rounded-2xl overflow-hidden h-80 relative example-item">
               <Image
-                src="/connection-design-1.jpg"
+                src="/moment-connection.png"
                 alt="Moment Connection Detail"
                 fill
                 className="object-cover"
@@ -542,7 +542,7 @@ export default function ConnectionDesignPage() {
 
             <div className="rounded-2xl overflow-hidden h-80 relative example-item">
               <Image
-                src="/connection-design-2.jpg"
+                src="/bracing-connection.png"
                 alt="Bracing Connection Detail"
                 fill
                 className="object-cover"

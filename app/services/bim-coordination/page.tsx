@@ -416,7 +416,7 @@ export default function BIMCoordination() {
           <div className="relative mb-32 overflow-hidden rounded-3xl border border-border/20 h-96">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-struo-red/10"></div>
             <Image
-              src="/bim-model-showcase.jpg"
+              src="/advanced-bim-modelling.webp"
               alt="3D BIM Model Coordination"
               fill
               className="object-cover"
@@ -623,7 +623,7 @@ export default function BIMCoordination() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/tekla-logo.svg"
+                    src="/tekla.jpg"
                     alt="Tekla Structures"
                     width={48}
                     height={48}
@@ -635,7 +635,7 @@ export default function BIMCoordination() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/tekla-bimsight-logo.svg"
+                    src="/tekla-bim.png"
                     alt="Tekla BIMsight"
                     width={48}
                     height={48}
@@ -647,7 +647,7 @@ export default function BIMCoordination() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/navisworks-logo.svg"
+                    src="/navisworks.png"
                     alt="Navisworks"
                     width={48}
                     height={48}
@@ -659,7 +659,7 @@ export default function BIMCoordination() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/revit-logo.svg"
+                    src="/revit.jpg"
                     alt="Revit"
                     width={48}
                     height={48}
@@ -671,7 +671,7 @@ export default function BIMCoordination() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/solibri-logo.svg"
+                    src="/solibri.webp"
                     alt="Solibri"
                     width={48}
                     height={48}

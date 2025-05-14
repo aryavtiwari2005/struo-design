@@ -395,7 +395,7 @@ export default function StructuralSteelDetailing() {
           {/* Main Image */}
           <div className="mb-32 rounded-2xl overflow-hidden h-96 relative">
             <Image
-              src="/steel-detailing-hero.jpg"
+              src="/industrial-steel-structure.jpg"
               alt="Structural Steel Detailing"
               fill
               className="object-cover"
@@ -532,7 +532,7 @@ export default function StructuralSteelDetailing() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/tekla-logo.svg"
+                    src="/tekla.jpg"
                     alt="Tekla Structures"
                     width={48}
                     height={48}
@@ -544,7 +544,7 @@ export default function StructuralSteelDetailing() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/sds2-logo.svg"
+                    src="/sds2.png"
                     alt="SDS/2"
                     width={48}
                     height={48}
@@ -556,7 +556,7 @@ export default function StructuralSteelDetailing() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/autocad-logo.svg"
+                    src="/autocad.png"
                     alt="AutoCAD"
                     width={48}
                     height={48}
@@ -568,7 +568,7 @@ export default function StructuralSteelDetailing() {
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto bg-secondary/20 rounded-xl flex items-center justify-center mb-3">
                   <Image
-                    src="/revit-logo.svg"
+                    src="/revit.jpg"
                     alt="Revit"
                     width={48}
                     height={48}
@@ -625,7 +625,7 @@ export default function StructuralSteelDetailing() {
           <div className="mb-32 grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="rounded-2xl overflow-hidden h-64 relative">
               <Image
-                src="/steel-detailing-1.jpg"
+                src="/3d-modelling-structural-steel.png"
                 alt="Steel Detailing Process"
                 fill
                 className="object-cover"
@@ -639,7 +639,7 @@ export default function StructuralSteelDetailing() {
 
             <div className="rounded-2xl overflow-hidden h-64 relative">
               <Image
-                src="/steel-detailing-2.jpg"
+                src="/shop-drawing.webp"
                 alt="Shop Drawing Creation"
                 fill
                 className="object-cover"
@@ -655,7 +655,7 @@ export default function StructuralSteelDetailing() {
 
             <div className="rounded-2xl overflow-hidden h-64 relative">
               <Image
-                src="/steel-detailing-3.jpg"
+                src="/fabrication-output.png"
                 alt="Fabrication Output"
                 fill
                 className="object-cover"

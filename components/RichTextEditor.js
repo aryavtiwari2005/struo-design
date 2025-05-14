@@ -1,3 +1,4 @@
+// RichTextEditor.tsx
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
@@ -45,11 +46,11 @@ const RichTextEditor = ({ content, onChange }) => {
     });
 
     return (
-        <div className="rich-text-editor border border-gray-300 rounded-md bg-white text-black">
+        <div className="rich-text-editor border border-gray-600 rounded-md bg-gray-700 text-gray-100">
             <MenuBar editor={editor} />
             <EditorContent
                 editor={editor}
-                className="p-4 min-h-[200px] bg-white text-black prose prose-sm max-w-none focus:outline-none"
+                className="p-4 min-h-[200px] bg-gray-700 text-gray-100 prose prose-sm max-w-none focus:outline-none"
             />
         </div>
     );

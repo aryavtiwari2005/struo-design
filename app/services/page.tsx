@@ -250,11 +250,11 @@ export default function Services() {
 
   // Lazy load software icons
   const softwareTools = [
-    { name: "Tekla Structures", src: "/tekla-logo.svg" },
-    { name: "SDS/2", src: "/sds2-logo.svg" },
-    { name: "AutoCAD", src: "/autocad-logo.svg" },
-    { name: "Revit", src: "/revit-logo.svg" },
-    { name: "STAAD.Pro", src: "/staad-logo.svg" },
+    { name: "Tekla Structures", src: "/tekla.jpg" },
+    { name: "SDS/2", src: "/sds2.png" },
+    { name: "AutoCAD", src: "/autocad.png" },
+    { name: "Revit", src: "/revit.jpg" },
+    { name: "STAAD.Pro", src: "/staad.png" },
   ];
 
   return (
@@ -277,9 +277,8 @@ export default function Services() {
           <div ref={heroRef} className="relative mb-20 md:mb-28">
             <div className="max-w-4xl mx-auto text-center">
               <div
-                className={`inline-flex items-center space-x-2 mb-4 transition-opacity duration-700 ${
-                  heroInView ? "opacity-100" : "opacity-0"
-                }`}
+                className={`inline-flex items-center space-x-2 mb-4 transition-opacity duration-700 ${heroInView ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 <div className="h-1 w-6 bg-struo-red rounded-full"></div>
                 <span className="text-sm font-semibold text-primary uppercase tracking-wide">
@@ -289,22 +288,20 @@ export default function Services() {
               </div>
 
               <h1
-                className={`text-3xl md:text-5xl font-extrabold leading-tight text-foreground mb-4 transition-all duration-700 ${
-                  heroInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
+                className={`text-3xl md:text-5xl font-extrabold leading-tight text-foreground mb-4 transition-all duration-700 ${heroInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+                  }`}
               >
                 Our Expertise,{" "}
                 <span className="text-struo-red">Your Competitive Edge</span>
               </h1>
 
               <p
-                className={`text-base md:text-lg text-muted-foreground leading-relaxed mb-6 max-w-3xl mx-auto transition-all duration-700 delay-100 ${
-                  heroInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
+                className={`text-base md:text-lg text-muted-foreground leading-relaxed mb-6 max-w-3xl mx-auto transition-all duration-700 delay-100 ${heroInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+                  }`}
               >
                 StruoIndia offers a complete suite of structural engineering
                 services for efficient, accurate, and cost-effective projects.
@@ -362,16 +359,14 @@ export default function Services() {
                 <div className="h-1 w-6 bg-struo-red rounded-full"></div>
               </div>
               <h2
-                className={`text-2xl md:text-3xl font-bold text-foreground transition-all duration-500 ${
-                  servicesInView ? "opacity-100" : "opacity-0"
-                }`}
+                className={`text-2xl md:text-3xl font-bold text-foreground transition-all duration-500 ${servicesInView ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 Comprehensive Engineering Solutions
               </h2>
               <p
-                className={`mt-3 text-base text-muted-foreground max-w-2xl mx-auto transition-all duration-500 delay-100 ${
-                  servicesInView ? "opacity-100" : "opacity-0"
-                }`}
+                className={`mt-3 text-base text-muted-foreground max-w-2xl mx-auto transition-all duration-500 delay-100 ${servicesInView ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 Our specialized services meet the unique needs of each project
                 with precision.
@@ -382,15 +377,12 @@ export default function Services() {
               {services.map((service, index) => (
                 <div
                   key={index}
-                  className={`${
-                    service.bgColor
-                  } p-6 rounded-xl shadow-sm border ${
-                    service.borderColor
-                  } transition-all duration-300 h-full flex flex-col transform ${
-                    servicesInView
+                  className={`${service.bgColor
+                    } p-6 rounded-xl shadow-sm border ${service.borderColor
+                    } transition-all duration-300 h-full flex flex-col transform ${servicesInView
                       ? "opacity-100 translate-y-0"
                       : "opacity-0 translate-y-4"
-                  }`}
+                    }`}
                   style={{ transitionDelay: `${100 + index * 50}ms` }}
                 >
                   <div
@@ -434,16 +426,14 @@ export default function Services() {
                 <div className="h-1 w-6 bg-struo-red rounded-full"></div>
               </div>
               <h2
-                className={`text-2xl md:text-3xl font-bold text-foreground transition-all duration-500 ${
-                  processInView ? "opacity-100" : "opacity-0"
-                }`}
+                className={`text-2xl md:text-3xl font-bold text-foreground transition-all duration-500 ${processInView ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 How We Deliver Excellence
               </h2>
               <p
-                className={`mt-3 text-base text-muted-foreground max-w-2xl mx-auto transition-all duration-500 delay-100 ${
-                  processInView ? "opacity-100" : "opacity-0"
-                }`}
+                className={`mt-3 text-base text-muted-foreground max-w-2xl mx-auto transition-all duration-500 delay-100 ${processInView ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 Our structured approach ensures quality at every stage.
               </p>
@@ -453,11 +443,10 @@ export default function Services() {
               {processSteps.map((step, index) => (
                 <div
                   key={index}
-                  className={`bg-secondary/10 hover:bg-secondary/15 p-6 rounded-xl border border-border/20 transition-all duration-300 transform ${
-                    processInView
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-4"
-                  }`}
+                  className={`bg-secondary/10 hover:bg-secondary/15 p-6 rounded-xl border border-border/20 transition-all duration-300 transform ${processInView
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-4"
+                    }`}
                   style={{ transitionDelay: `${100 + index * 50}ms` }}
                 >
                   <div className="flex items-center mb-3">
@@ -483,7 +472,7 @@ export default function Services() {
             <div className="mb-20 md:mb-28 grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="rounded-xl overflow-hidden h-64 relative">
                 <Image
-                  src="/services-1.jpg"
+                  src="/industrial-steel-structure.jpg"
                   alt="Structural Steel Project"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -506,7 +495,7 @@ export default function Services() {
 
               <div className="rounded-xl overflow-hidden h-64 relative">
                 <Image
-                  src="/services-2.jpg"
+                  src="/advanced-bim-modelling.webp"
                   alt="3D BIM Model"
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -562,11 +551,10 @@ export default function Services() {
           {/* CTA Section - Simplified */}
           <div
             ref={ctaRef}
-            className={`bg-gradient-to-r from-struo-red/10 to-primary/10 rounded-xl p-8 border border-border/20 relative overflow-hidden transition-all duration-700 ${
-              ctaInView
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
+            className={`bg-gradient-to-r from-struo-red/10 to-primary/10 rounded-xl p-8 border border-border/20 relative overflow-hidden transition-all duration-700 ${ctaInView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+              }`}
           >
             <div className="relative z-10 max-w-3xl mx-auto text-center">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">

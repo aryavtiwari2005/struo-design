@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: "komnqzbfwzxcadiseknx.supabase.co",
         pathname: "/storage/v1/object/public/blog-images/**",
       },
+      {
+        protocol: "https",
+        hostname: "www.struoindia.com",
+        pathname: "/wp-content/uploads/**",
+      }
     ],
   },
   eslint: {

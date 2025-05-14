@@ -1,4 +1,3 @@
-// app/contact/page.tsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -20,12 +19,11 @@ import {
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Link from "next/link";
-
-// Dynamically import heavy libraries
-import dynamic from "next/dynamic";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Contact() {
-  // Use native Intersection Observer instead of GSAP
+  const supabase = createClientComponentClient();
+
   const heroRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -40,6 +38,7 @@ export default function Contact() {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const options = {
@@ -89,16 +88,39 @@ export default function Contact() {
     };
   }, []);
 
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError(null);
 
-    // Simulate form submission
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name") as string,
+      email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      company: formData.get("company") as string,
+      service: formData.get("service") as string,
+      message: formData.get("message") as string,
+      terms_accepted: formData.get("terms") === "on",
+    };
+
+    try {
+      const { error } = await supabase.from("contact_struo").insert([data]);
+
+      if (error) {
+        console.error("Error submitting form:", error);
+        setError("Failed to submit your request. Please try again.");
+        setIsSubmitting(false);
+        return;
+      }
+
       setFormSubmitted(true);
-    }, 1500);
+    } catch (err) {
+      console.error("Unexpected error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const contactInfo = [
@@ -170,7 +192,6 @@ export default function Contact() {
         id="contact"
         className="relative pt-20 pb-24 md:pt-28 md:pb-32 overflow-hidden bg-background text-foreground"
       >
-        {/* Simplified Background - only render on desktop */}
         {typeof window !== "undefined" && window.innerWidth > 768 && (
           <div className="absolute inset-0 z-0">
             <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 rounded-full blur-3xl opacity-70" />
@@ -179,13 +200,11 @@ export default function Contact() {
         )}
 
         <div className="container relative z-10 px-4 md:px-6">
-          {/* Hero Section - with animations only when in view */}
           <div ref={heroRef} className="relative mb-20 md:mb-28">
             <div className="max-w-4xl mx-auto text-center">
               <div
-                className={`inline-flex items-center space-x-2 mb-4 transition-opacity duration-700 ${
-                  heroInView ? "opacity-100" : "opacity-0"
-                }`}
+                className={`inline-flex items-center space-x-2 mb-4 transition-opacity duration-700 ${heroInView ? "opacity-100" : "opacity-0"
+                  }`}
               >
                 <div className="h-1 w-6 bg-struo-red rounded-full"></div>
                 <span className="text-sm font-semibold text-primary uppercase tracking-wide">
@@ -195,22 +214,20 @@ export default function Contact() {
               </div>
 
               <h1
-                className={`text-3xl md:text-5xl font-extrabold leading-tight text-foreground mb-4 transition-all duration-700 ${
-                  heroInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
+                className={`text-3xl md:text-5xl font-extrabold leading-tight text-foreground mb-4 transition-all duration-700 ${heroInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+                  }`}
               >
                 Let's Build Your{" "}
                 <span className="text-struo-red">Next Project Together</span>
               </h1>
 
               <p
-                className={`text-base md:text-lg text-muted-foreground leading-relaxed mb-6 max-w-3xl mx-auto transition-all duration-700 delay-100 ${
-                  heroInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-4"
-                }`}
+                className={`text-base md:text-lg text-muted-foreground leading-relaxed mb-6 max-w-3xl mx-auto transition-all duration-700 delay-100 ${heroInView
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-4"
+                  }`}
               >
                 Have questions or ready to start? Our team of structural
                 engineering experts is here to help bring your vision to life.
@@ -218,16 +235,13 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Contact Form and Info Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
-            {/* Contact Form */}
             <div
               ref={formRef}
-              className={`lg:col-span-2 bg-secondary/5 p-8 rounded-xl shadow-sm border border-border/20 transition-all duration-500 ${
-                formInView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
-              }`}
+              className={`lg:col-span-2 bg-secondary/5 p-8 rounded-xl shadow-sm border border-border/20 transition-all duration-500 ${formInView
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+                }`}
             >
               <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
 
@@ -253,6 +267,7 @@ export default function Contact() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
+                  {error && <p className="text-red-500">{error}</p>}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-sm font-medium">
@@ -260,6 +275,7 @@ export default function Contact() {
                       </label>
                       <input
                         id="name"
+                        name="name"
                         type="text"
                         required
                         className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition"
@@ -272,6 +288,7 @@ export default function Contact() {
                       </label>
                       <input
                         id="email"
+                        name="email"
                         type="email"
                         required
                         className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition"
@@ -287,6 +304,7 @@ export default function Contact() {
                       </label>
                       <input
                         id="phone"
+                        name="phone"
                         type="tel"
                         className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition"
                         placeholder="+91 98765 43210"
@@ -298,6 +316,7 @@ export default function Contact() {
                       </label>
                       <input
                         id="company"
+                        name="company"
                         type="text"
                         className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition"
                         placeholder="Your Company Ltd."
@@ -311,6 +330,7 @@ export default function Contact() {
                     </label>
                     <select
                       id="service"
+                      name="service"
                       required
                       defaultValue=""
                       className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition"
@@ -347,6 +367,7 @@ export default function Contact() {
                     </label>
                     <textarea
                       id="message"
+                      name="message"
                       required
                       rows={5}
                       className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition"
@@ -357,6 +378,7 @@ export default function Contact() {
                   <div className="flex items-start">
                     <input
                       id="terms"
+                      name="terms"
                       type="checkbox"
                       required
                       className="mt-1 focus:ring-struo-red"
@@ -418,14 +440,12 @@ export default function Contact() {
               )}
             </div>
 
-            {/* Contact Info */}
             <div
               ref={infoRef}
-              className={`space-y-4 transition-all duration-500 ${
-                infoInView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
-              }`}
+              className={`space-y-4 transition-all duration-500 ${infoInView
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+                }`}
             >
               {contactInfo.map((item, index) => (
                 <div
@@ -451,7 +471,6 @@ export default function Contact() {
                 </div>
               ))}
 
-              {/* Social Media */}
               <div className="pt-6">
                 <h3 className="text-sm font-medium mb-3">Connect With Us</h3>
                 <div className="flex space-x-3">
@@ -488,15 +507,12 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Map Section */}
           <div
             ref={mapRef}
-            className={`mb-20 transition-all duration-700 ${
-              mapInView ? "opacity-100" : "opacity-0"
-            }`}
+            className={`mb-20 transition-all duration-700 ${mapInView ? "opacity-100" : "opacity-0"
+              }`}
           >
             <div className="rounded-xl overflow-hidden h-80 border border-border/20 relative">
-              {/* Placeholder for an actual map integration */}
               <div className="absolute inset-0 bg-secondary/10 flex items-center justify-center">
                 <div className="text-center">
                   <MapPin className="h-12 w-12 text-struo-red/40 mx-auto mb-3" />
@@ -510,14 +526,12 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* FAQs Section */}
           <div
             ref={faqRef}
-            className={`mb-20 transition-all duration-700 ${
-              faqInView
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-8"
-            }`}
+            className={`mb-20 transition-all duration-700 ${faqInView
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-8"
+              }`}
           >
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-8">
@@ -548,17 +562,10 @@ export default function Contact() {
                 <p className="text-sm text-muted-foreground mb-4">
                   Still have questions? Our team is ready to help.
                 </p>
-                {/* <Button
-                  variant="outline"
-                  className="rounded-full border-border/50 text-foreground hover:bg-secondary/50 px-6"
-                >
-                  View More FAQs
-                </Button> */}
               </div>
             </div>
           </div>
 
-          {/* CTA Section */}
           <div className="bg-gradient-to-r from-struo-red/10 to-primary/10 rounded-xl p-8 border border-border/20 relative overflow-hidden">
             <div className="relative z-10 max-w-3xl mx-auto text-center">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
@@ -571,13 +578,6 @@ export default function Contact() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {/* <Button
-                  size="lg"
-                  className="rounded-full group bg-struo-red hover:bg-struo-red/90 text-white px-6"
-                >
-                  Schedule a Consultation
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                </Button> */}
                 <Link href="/services">
                   <Button
                     variant="outline"

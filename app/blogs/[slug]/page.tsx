@@ -41,7 +41,9 @@ export async function generateStaticParams() {
 export default async function BlogPage({
     params,
 }: any) {
-    const { slug } = params;
+    // Await params before accessing properties
+    const resolvedParams = await params;
+    const { slug } = resolvedParams;
 
     // Fetch the blog by slug
     const { data: blog, error } = await supabase

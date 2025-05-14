@@ -5,6 +5,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import CustomCursor from "@/components/custom-cursor";
 import SmoothScroll from "@/components/smooth-scroll";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${poppins.variable} font-sans antialiased`}
       >
+        <ScrollToTop />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

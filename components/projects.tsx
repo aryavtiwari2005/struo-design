@@ -111,10 +111,12 @@ export default function Projects() {
                   {project.description}
                 </p>
                 <MagneticButton>
-                  <Button variant="ghost" size="sm" className="p-0 h-auto">
-                    <span className="text-primary">View Project</span>
-                    <ExternalLink className="ml-2 h-3 w-3 text-primary" />
-                  </Button>
+                  <Link href="/projects">
+                    <Button variant="ghost" size="sm" className="p-0 h-auto">
+                      <span className="text-primary">View Project</span>
+                      <ExternalLink className="ml-2 h-3 w-3 text-primary" />
+                    </Button>
+                  </Link>
                 </MagneticButton>
               </div>
             </motion.div>

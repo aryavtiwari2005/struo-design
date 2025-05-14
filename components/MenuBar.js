@@ -1,3 +1,4 @@
+// MenuBar.tsx
 "use client";
 
 import { useState } from "react";
@@ -82,21 +83,21 @@ const MenuBar = ({ editor }) => {
     };
 
     // Base classes for menu buttons
-    const buttonBaseClass = "p-2 rounded text-gray-700 hover:bg-gray-100 !text-gray-700";
-    const buttonActiveClass = "bg-gray-200 !text-gray-700";
+    const buttonBaseClass = "p-2 rounded text-gray-200 hover:bg-gray-600";
+    const buttonActiveClass = "bg-gray-500";
 
     return (
-        <div className="border-b border-gray-300 p-2 bg-white text-gray-700 !text-gray-700">
+        <div className="border-b border-gray-600 p-2 bg-gray-800 text-gray-200">
             <div className="flex flex-wrap gap-2">
                 {/* Text Style Controls */}
-                <div className="flex gap-1 border-r pr-2">
+                <div className="flex gap-1 border-r border-gray-600 pr-2">
                     <button
                         type="button"
                         onClick={() => editor.chain().focus().toggleBold().run()}
                         className={`${buttonBaseClass} ${editor.isActive("bold") ? buttonActiveClass : ""}`}
                         title="Bold"
                     >
-                        <Bold size={16} className="!text-gray-700" />
+                        <Bold size={16} />
                     </button>
                     <button
                         type="button"
@@ -104,7 +105,7 @@ const MenuBar = ({ editor }) => {
                         className={`${buttonBaseClass} ${editor.isActive("italic") ? buttonActiveClass : ""}`}
                         title="Italic"
                     >
-                        <Italic size={16} className="!text-gray-700" />
+                        <Italic size={16} />
                     </button>
                     <button
                         type="button"
@@ -112,19 +113,19 @@ const MenuBar = ({ editor }) => {
                         className={`${buttonBaseClass} ${editor.isActive("underline") ? buttonActiveClass : ""}`}
                         title="Underline"
                     >
-                        <UnderlineIcon size={16} className="!text-gray-700" />
+                        <UnderlineIcon size={16} />
                     </button>
                 </div>
 
                 {/* Alignment Controls */}
-                <div className="flex gap-1 border-r pr-2">
+                <div className="flex gap-1 border-r border-gray-600 pr-2">
                     <button
                         type="button"
                         onClick={() => editor.chain().focus().setTextAlign("left").run()}
                         className={`${buttonBaseClass} ${editor.isActive({ textAlign: "left" }) ? buttonActiveClass : ""}`}
                         title="Align Left"
                     >
-                        <AlignLeft size={16} className="!text-gray-700" />
+                        <AlignLeft size={16} />
                     </button>
                     <button
                         type="button"
@@ -132,7 +133,7 @@ const MenuBar = ({ editor }) => {
                         className={`${buttonBaseClass} ${editor.isActive({ textAlign: "center" }) ? buttonActiveClass : ""}`}
                         title="Align Center"
                     >
-                        <AlignCenter size={16} className="!text-gray-700" />
+                        <AlignCenter size={16} />
                     </button>
                     <button
                         type="button"
@@ -140,19 +141,19 @@ const MenuBar = ({ editor }) => {
                         className={`${buttonBaseClass} ${editor.isActive({ textAlign: "right" }) ? buttonActiveClass : ""}`}
                         title="Align Right"
                     >
-                        <AlignRight size={16} className="!text-gray-700" />
+                        <AlignRight size={16} />
                     </button>
                 </div>
 
                 {/* List Controls */}
-                <div className="flex gap-1 border-r pr-2">
+                <div className="flex gap-1 border-r border-gray-600 pr-2">
                     <button
                         type="button"
                         onClick={() => editor.chain().focus().toggleBulletList().run()}
                         className={`${buttonBaseClass} ${editor.isActive("bulletList") ? buttonActiveClass : ""}`}
                         title="Bullet List"
                     >
-                        <List size={16} className="!text-gray-700" />
+                        <List size={16} />
                     </button>
                     <button
                         type="button"
@@ -160,33 +161,33 @@ const MenuBar = ({ editor }) => {
                         className={`${buttonBaseClass} ${editor.isActive("orderedList") ? buttonActiveClass : ""}`}
                         title="Numbered List"
                     >
-                        <ListOrdered size={16} className="!text-gray-700" />
+                        <ListOrdered size={16} />
                     </button>
                 </div>
 
                 {/* Font Size Control */}
-                <div className="flex gap-1 border-r pr-2 relative">
+                <div className="flex gap-1 border-r border-gray-600 pr-2 relative">
                     <button
                         type="button"
                         onClick={() => setShowFontSize(!showFontSize)}
                         className={buttonBaseClass}
                         title="Font Size"
                     >
-                        <Type size={16} className="!text-gray-700" />
+                        <Type size={16} />
                     </button>
                     {showFontSize && (
-                        <div className="absolute top-full left-0 mt-2 p-2 bg-white text-gray-700 shadow-lg rounded-lg z-20 border border-gray-200 min-w-[100px]">
+                        <div className="absolute top-full left-0 mt-2 p-2 bg-gray-800 text-gray-200 shadow-lg rounded-lg z-20 border border-gray-600 min-w-[100px]">
                             {fontSizes.map((size) => (
                                 <button
                                     type="button"
                                     key={size}
-                                    className="block w-full text-left px-3 py-1.5 text-gray-700 !text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                                    className="block w-full text-left px-3 py-1.5 text-gray-200 hover:bg-gray-600 rounded transition-colors"
                                     onClick={() => {
                                         editor.chain().focus().setFontSize(size).run();
                                         setShowFontSize(false);
                                     }}
                                 >
-                                    <span style={{ fontSize: size }} className="!text-gray-700">{size}</span>
+                                    <span style={{ fontSize: size }}>{size}</span>
                                 </button>
                             ))}
                         </div>
@@ -194,14 +195,14 @@ const MenuBar = ({ editor }) => {
                 </div>
 
                 {/* Format Controls */}
-                <div className="flex gap-1 border-r pr-2">
+                <div className="flex gap-1 border-r border-gray-600 pr-2">
                     <button
                         type="button"
                         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
                         className={`${buttonBaseClass} ${editor.isActive("heading", { level: 2 }) ? buttonActiveClass : ""}`}
                         title="Heading"
                     >
-                        <Heading2 size={16} className="!text-gray-700" />
+                        <Heading2 size={16} />
                     </button>
                     <button
                         type="button"
@@ -209,19 +210,19 @@ const MenuBar = ({ editor }) => {
                         className={`${buttonBaseClass} ${editor.isActive("blockquote") ? buttonActiveClass : ""}`}
                         title="Quote"
                     >
-                        <Quote size={16} className="!text-gray-700" />
+                        <Quote size={16} />
                     </button>
                 </div>
 
                 {/* Color Controls */}
-                <div className="flex gap-1 border-r pr-2 relative">
+                <div className="flex gap-1 border-r border-gray-600 pr-2 relative">
                     <button
                         type="button"
                         onClick={() => setShowColorPicker(!showColorPicker)}
                         className={buttonBaseClass}
                         title="Text Color"
                     >
-                        <Palette size={16} className="!text-gray-700" />
+                        <Palette size={16} />
                     </button>
                     <button
                         type="button"
@@ -229,15 +230,15 @@ const MenuBar = ({ editor }) => {
                         className={buttonBaseClass}
                         title="Highlight Color"
                     >
-                        <Highlighter size={16} className="!text-gray-700" />
+                        <Highlighter size={16} />
                     </button>
                     {showColorPicker && (
-                        <div className="absolute top-full left-0 mt-2 p-2 bg-white shadow-lg rounded-lg z-20 border border-gray-200 grid grid-cols-10 gap-1">
+                        <div className="absolute top-full left-0 mt-2 p-2 bg-gray-800 shadow-lg rounded-lg z-20 border border-gray-600 grid grid-cols-10 gap-1">
                             {colors.map((color) => (
                                 <button
                                     type="button"
                                     key={color}
-                                    className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
+                                    className="w-6 h-6 rounded-full border border-gray-600 hover:scale-110 transition-transform"
                                     style={{ backgroundColor: color }}
                                     onClick={() => {
                                         editor.chain().focus().setColor(color).run();
@@ -248,12 +249,12 @@ const MenuBar = ({ editor }) => {
                         </div>
                     )}
                     {showHighlightPicker && (
-                        <div className="absolute top-full left-0 mt-2 p-2 bg-white shadow-lg rounded-lg z-20 border border-gray-200 grid grid-cols-10 gap-1">
+                        <div className="absolute top-full left-0 mt-2 p-2 bg-gray-800 shadow-lg rounded-lg z-20 border border-gray-600 grid grid-cols-10 gap-1">
                             {colors.map((color) => (
                                 <button
                                     type="button"
                                     key={color}
-                                    className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
+                                    className="w-6 h-6 rounded-full border border-gray-600 hover:scale-110 transition-transform"
                                     style={{ backgroundColor: color }}
                                     onClick={() => {
                                         editor.chain().focus().setHighlight({ color }).run();
@@ -266,14 +267,14 @@ const MenuBar = ({ editor }) => {
                 </div>
 
                 {/* Link Control */}
-                <div className="flex gap-1 border-r pr-2">
+                <div className="flex gap-1 border-r border-gray-600 pr-2">
                     <button
                         type="button"
                         onClick={setLink}
                         className={`${buttonBaseClass} ${editor.isActive("link") ? buttonActiveClass : ""}`}
                         title="Add Link"
                     >
-                        <LinkIcon size={16} className="!text-gray-700" />
+                        <LinkIcon size={16} />
                     </button>
                     <button
                         type="button"
@@ -281,7 +282,7 @@ const MenuBar = ({ editor }) => {
                         className={buttonBaseClass}
                         title="Add Image"
                     >
-                        <ImageIcon size={16} className="!text-gray-700" />
+                        <ImageIcon size={16} />
                     </button>
                 </div>
 
@@ -293,7 +294,7 @@ const MenuBar = ({ editor }) => {
                         className={buttonBaseClass}
                         title="Undo"
                     >
-                        <Undo size={16} className="!text-gray-700" />
+                        <Undo size={16} />
                     </button>
                     <button
                         type="button"
@@ -301,7 +302,7 @@ const MenuBar = ({ editor }) => {
                         className={buttonBaseClass}
                         title="Redo"
                     >
-                        <Redo size={16} className="!text-gray-700" />
+                        <Redo size={16} />
                     </button>
                 </div>
             </div>
@@ -309,4 +310,4 @@ const MenuBar = ({ editor }) => {
     );
 };
 
-export default MenuBar; 
+export default MenuBar;

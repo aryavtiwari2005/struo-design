@@ -147,9 +147,7 @@ export default function Blogs() {
                                     <h3 className="text-lg font-bold mb-2 text-foreground">
                                         {blog.title}
                                     </h3>
-                                    <p className="text-sm text-muted-foreground mb-4 flex-grow">
-                                        {blog.content.replace(/<[^>]+>/g, "").substring(0, 100)}...
-                                    </p>
+                        
                                     <Link href={`/blogs/${blog.slug}`}>
                                         <Button
                                             variant="link"

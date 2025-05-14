@@ -22,7 +22,7 @@ export default function Services() {
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const minSwipeDistance = 50; // Minimum distance required for a swipe
+  const minSwipeDistance = 50;
 
   const services = [
     {
@@ -83,7 +83,6 @@ export default function Services() {
     setActiveIndex((prev) => (prev === 0 ? services.length - 1 : prev - 1));
   };
 
-  // Handle touch events for swiping
   const handleTouchStart = (e: React.TouchEvent | TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
   };
@@ -94,27 +93,21 @@ export default function Services() {
 
   const handleTouchEnd = () => {
     const distance = touchStartX.current - touchEndX.current;
-
-    // Check if the swipe distance is significant enough
     if (Math.abs(distance) > minSwipeDistance) {
       if (distance > 0) {
-        // Swiped left, go to next
         nextService();
       } else {
-        // Swiped right, go to previous
         prevService();
       }
     }
   };
 
-  // Add touch event listeners to the carousel container
   useEffect(() => {
     const carousel = carouselRef.current;
     if (carousel) {
       const touchStartHandler = (e: TouchEvent) => handleTouchStart(e);
       const touchMoveHandler = (e: TouchEvent) => handleTouchMove(e);
       const touchEndHandler = () => handleTouchEnd();
-
       carousel.addEventListener("touchstart", touchStartHandler, {
         passive: true,
       });
@@ -122,7 +115,6 @@ export default function Services() {
         passive: true,
       });
       carousel.addEventListener("touchend", touchEndHandler, { passive: true });
-
       return () => {
         carousel.removeEventListener("touchstart", touchStartHandler);
         carousel.removeEventListener("touchmove", touchMoveHandler);
@@ -131,7 +123,6 @@ export default function Services() {
     }
   }, []);
 
-  // Variants for framer-motion animations
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -185,17 +176,19 @@ export default function Services() {
             <motion.div
               key={index}
               variants={cardVariants}
-              className={`rounded-2xl bg-gradient-to-br ${service.darkColor} border border-border/50 overflow-hidden`}
+              className={`rounded-2xl bg-gradient-to-br ${service.darkColor} border border-border/50 overflow-hidden min-h-[250px] flex flex-col`}
             >
               <div
-                className={`h-full p-6 ${service.bgColor} transition-all duration-300 border border-border/50 rounded-2xl`}
+                className={`flex-1 p-6 ${service.bgColor} transition-all duration-300 border border-border/50 rounded-2xl flex flex-col`}
               >
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                  <service.icon className="h-6 w-6 text-primary" />
+                <div>
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                    <service.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-lg md:text-xl font-bold mb-3 text-foreground">
+                    {service.title}
+                  </h3>
                 </div>
-                <h3 className="text-lg md:text-xl font-bold mb-3 text-foreground">
-                  {service.title}
-                </h3>
                 <p className="text-sm text-muted-foreground">
                   {service.description}
                 </p>
@@ -206,7 +199,6 @@ export default function Services() {
 
         {/* Mobile View: Swipeable Carousel */}
         <div className="md:hidden relative mb-8">
-          {/* Swipeable Carousel container */}
           <div
             ref={carouselRef}
             className="relative h-[250px] overflow-hidden rounded-2xl touch-pan-y cursor-grab active:cursor-grabbing"
@@ -229,14 +221,16 @@ export default function Services() {
                 transition={{ duration: 0.4 }}
               >
                 <div
-                  className={`h-full p-6 ${service.bgColor} transition-all duration-300 border border-border/50 rounded-2xl`}
+                  className={`h-full p-6 ${service.bgColor} transition-all duration-300 border border-border/50 rounded-2xl flex flex-col`}
                 >
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                    <service.icon className="h-6 w-6 text-primary" />
+                  <div>
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                      <service.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="text-lg font-bold mb-3 text-foreground">
+                      {service.title}
+                    </h3>
                   </div>
-                  <h3 className="text-lg font-bold mb-3 text-foreground">
-                    {service.title}
-                  </h3>
                   <p className="text-sm text-muted-foreground">
                     {service.description}
                   </p>
@@ -245,12 +239,6 @@ export default function Services() {
             ))}
           </div>
 
-          {/* Swipe hint message */}
-          {/* <div className="text-center text-xs text-muted-foreground mt-3 mb-1">
-            <span>← Swipe to navigate →</span>
-          </div> */}
-
-          {/* Pagination dots */}
           <div className="flex justify-center gap-2 mt-1">
             {services.map((_, index) => (
               <button
