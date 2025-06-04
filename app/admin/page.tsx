@@ -394,6 +394,19 @@ export default function AdminBlogs() {
                     {error && <p className="text-red-500 mb-4">{error}</p>}
 
                     <div className="mb-12">
+                        <h2 className="text-2xl font-bold text-gray-100 mb-4">Projects</h2>
+                        <p className="text-gray-400 mb-4">
+                            Manage your projects here. You can add, edit, or delete projects as needed.
+                        </p>
+                        <Button
+                            onClick={() => router.push("/admin/projects")}
+                            className="bg-struo-red hover:bg-struo-red/90 text-white rounded-full px-6"
+                        >
+                            Go to Projects
+                        </Button>
+                    </div>
+
+                    <div className="mb-12">
                         <h2 className="text-2xl font-bold text-gray-100 mb-4">Blogs</h2>
                         <div className="mb-8">
                             <Button

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -19,11 +18,8 @@ import {
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
 import Link from "next/link";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 export default function Contact() {
-  const supabase = createClientComponentClient();
-
   const heroRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const infoRef = useRef<HTMLDivElement>(null);
@@ -105,19 +101,27 @@ export default function Contact() {
     };
 
     try {
-      const { error } = await supabase.from("contact_struo").insert([data]);
+      const response = await fetch("/api/send-contact-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      if (error) {
-        console.error("Error submitting form:", error);
-        setError("Failed to submit your request. Please try again.");
-        setIsSubmitting(false);
-        return;
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to submit form");
       }
 
       setFormSubmitted(true);
+      (e.target as HTMLFormElement).reset();
     } catch (err) {
-      console.error("Unexpected error:", err);
-      setError("An unexpected error occurred. Please try again.");
+      console.error("Error submitting form:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -143,7 +147,10 @@ export default function Contact() {
     {
       icon: MapPin,
       title: "Office",
-      details: ["Canada: 2704 Eagle Mountain Drive, Abbotsford, British Columbia - V3G0C4", "India: A-45, Kanchan Kunj, Mandanpur Khadar Extn-2, New Delhi - 110076"],
+      details: [
+        "Canada: 2704 Eagle Mountain Drive, Abbotsford, British Columbia - V3G0C4",
+        "India: A-45, Kanchan Kunj, Mandanpur Khadar Extn-2, New Delhi - 110076",
+      ],
       bgColor: "bg-green-500/5 hover:bg-green-500/10",
       borderColor: "border-green-500/20",
       iconBg: "bg-green-500/10",
@@ -203,23 +210,17 @@ export default function Contact() {
               </div>
 
               <h1
-                className={`text-3xl md:text-5xl font-extrabold leading-tight text-foreground mb-4 transition-all duration-700 ${heroInView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
+                className={`text-3xl md:text-5xl font-extrabold leading-tight text-foreground mb-4 transition-all duration-700 ${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   }`}
               >
-                Let's Build Your{" "}
-                <span className="text-struo-red">Next Project Together</span>
+                Let's Build Your <span className="text-struo-red">Next Project Together</span>
               </h1>
 
               <p
-                className={`text-base md:text-lg text-muted-foreground leading-relaxed mb-6 max-w-3xl mx-auto transition-all duration-700 delay-100 ${heroInView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-4"
+                className={`text-base md:text-lg text-muted-foreground leading-relaxed mb-6 max-w-3xl mx-auto transition-all duration-700 delay-100 ${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                   }`}
               >
-                Have questions or ready to start? Our team of structural
-                engineering experts is here to help bring your vision to life.
+                Have questions or ready to start? Our team of structural engineering experts is here to help bring your vision to life.
               </p>
             </div>
           </div>
@@ -227,9 +228,7 @@ export default function Contact() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
             <div
               ref={formRef}
-              className={`lg:col-span-2 bg-secondary/5 p-8 rounded-xl shadow-sm border border-border/20 transition-all duration-500 ${formInView
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
+              className={`lg:col-span-2 bg-secondary/5 p-8 rounded-xl shadow-sm border border-border/20 transition-all duration-500 ${formInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
             >
               <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
@@ -239,12 +238,9 @@ export default function Contact() {
                   <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-4">
                     <Check className="h-8 w-8 text-green-500" />
                   </div>
-                  <h3 className="text-xl font-bold">
-                    Message Sent Successfully!
-                  </h3>
+                  <h3 className="text-xl font-bold">Message Sent Successfully!</h3>
                   <p className="text-muted-foreground max-w-md">
-                    Thank you for reaching out. Our team will get back to you
-                    within 24 hours.
+                    Thank you for reaching out. Our team will get back to you within 24 hours.
                   </p>
                   <Button
                     className="mt-4"
@@ -327,25 +323,13 @@ export default function Contact() {
                       <option value="" disabled>
                         Select a service
                       </option>
-                      <option value="steel-detailing">
-                        Structural Steel Detailing
-                      </option>
-                      <option value="peb">
-                        Pre-Engineered Building Detailing
-                      </option>
-                      <option value="connection-design">
-                        Connection Design
-                      </option>
-                      <option value="material-takeoff">
-                        Material Take-off (ABM)
-                      </option>
+                      <option value="steel-detailing">Structural Steel Detailing</option>
+                      <option value="peb">Pre-Engineered Building Detailing</option>
+                      <option value="connection-design">Connection Design</option>
+                      <option value="material-takeoff">Material Take-off (ABM)</option>
                       <option value="bim">BIM Coordination</option>
-                      <option value="shop-drawings">
-                        Fabrication Shop Drawings
-                      </option>
-                      <option value="value-engineering">
-                        Value Engineering
-                      </option>
+                      <option value="shop-drawings">Fabrication Shop Drawings</option>
+                      <option value="value-engineering">Value Engineering</option>
                       <option value="other">Other</option>
                     </select>
                   </div>
@@ -372,16 +356,12 @@ export default function Contact() {
                       required
                       className="mt-1 focus:ring-struo-red"
                     />
-                    <label
-                      htmlFor="terms"
-                      className="ml-2 text-xs text-muted-foreground"
-                    >
+                    <label htmlFor="terms" className="ml-2 text-xs text-muted-foreground">
                       I agree to the{" "}
                       <a href="#" className="text-struo-red hover:underline">
                         Terms & Conditions
                       </a>{" "}
-                      and acknowledge that my information will be processed in
-                      accordance with the{" "}
+                      and acknowledge that my information will be processed in accordance with the{" "}
                       <a href="#" className="text-struo-red hover:underline">
                         Privacy Policy
                       </a>
@@ -431,9 +411,7 @@ export default function Contact() {
 
             <div
               ref={infoRef}
-              className={`space-y-4 transition-all duration-500 ${infoInView
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
+              className={`space-y-4 transition-all duration-500 ${infoInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                 }`}
             >
               {contactInfo.map((item, index) => (
@@ -464,32 +442,12 @@ export default function Contact() {
                 <h3 className="text-sm font-medium mb-3">Connect With Us</h3>
                 <div className="flex space-x-3">
                   <a
-                    href="#"
+                    href="https://www.linkedin.com/company/106694149/admin/dashboard/"
+                    target="_blank"
                     className="w-9 h-9 rounded-full bg-secondary/20 flex items-center justify-center hover:bg-struo-red/20 transition-colors"
                     aria-label="LinkedIn"
                   >
                     <Linkedin className="h-4 w-4" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-9 h-9 rounded-full bg-secondary/20 flex items-center justify-center hover:bg-struo-red/20 transition-colors"
-                    aria-label="Facebook"
-                  >
-                    <Facebook className="h-4 w-4" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-9 h-9 rounded-full bg-secondary/20 flex items-center justify-center hover:bg-struo-red/20 transition-colors"
-                    aria-label="Instagram"
-                  >
-                    <Instagram className="h-4 w-4" />
-                  </a>
-                  <a
-                    href="#"
-                    className="w-9 h-9 rounded-full bg-secondary/20 flex items-center justify-center hover:bg-struo-red/20 transition-colors"
-                    aria-label="Twitter"
-                  >
-                    <Twitter className="h-4 w-4" />
                   </a>
                 </div>
               </div>
@@ -498,8 +456,7 @@ export default function Contact() {
 
           <div
             ref={mapRef}
-            className={`mb-20 transition-all duration-700 ${mapInView ? "opacity-100" : "opacity-0"
-              }`}
+            className={`mb-20 transition-all duration-700 ${mapInView ? "opacity-100" : "opacity-0"}`}
           >
             <div className="rounded-xl overflow-hidden h-80 border border-border/20 relative">
               <div className="absolute inset-0 bg-secondary/10 flex items-center justify-center">
@@ -507,8 +464,7 @@ export default function Contact() {
                   <MapPin className="h-12 w-12 text-struo-red/40 mx-auto mb-3" />
                   <p className="text-sm text-muted-foreground">
                     Map integration would go here. <br />
-                    Visit us at: 123 Engineering Hub, Sector 5, Delhi NCR, India
-                    - 201301
+                    Visit us at: 123 Engineering Hub, Sector 5, Delhi NCR, India - 201301
                   </p>
                 </div>
               </div>
@@ -517,16 +473,12 @@ export default function Contact() {
 
           <div
             ref={faqRef}
-            className={`mb-20 transition-all duration-700 ${faqInView
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-8"
+            className={`mb-20 transition-all duration-700 ${faqInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
               }`}
           >
             <div className="max-w-3xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-2">
-                  Frequently Asked Questions
-                </h2>
+                <h2 className="text-2xl font-bold mb-2">Frequently Asked Questions</h2>
                 <p className="text-muted-foreground">
                   Quick answers to common inquiries about our services
                 </p>
@@ -540,9 +492,7 @@ export default function Contact() {
                     style={{ transitionDelay: `${100 + index * 50}ms` }}
                   >
                     <h3 className="text-lg font-medium mb-2">{faq.question}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {faq.answer}
-                    </p>
+                    <p className="text-sm text-muted-foreground">{faq.answer}</p>
                   </div>
                 ))}
               </div>
@@ -562,8 +512,7 @@ export default function Contact() {
               </h2>
 
               <p className="text-sm md:text-base text-muted-foreground mb-6 max-w-2xl mx-auto">
-                From consultation to completion, we're committed to your
-                project's success.
+                From consultation to completion, we're committed to your project's success.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">

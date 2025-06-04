@@ -10,26 +10,18 @@ import {
   Phone,
   Mail,
   Send,
-  Loader2,
-  Facebook,
-  Twitter,
+  Check,
   Linkedin,
-  Instagram,
 } from "lucide-react";
 import MagneticButton from "./magnetic-button";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 const socialIcons = {
-  facebook: Facebook,
-  twitter: Twitter,
   linkedin: Linkedin,
-  instagram: Instagram,
 };
 
 export default function Contact() {
-  const supabase = createClientComponentClient();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -41,30 +33,35 @@ export default function Contact() {
     const data = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
+      phone: formData.get("phone") as string,
+      company: formData.get("company") as string,
       service: formData.get("service") as string,
       message: formData.get("message") as string,
       terms_accepted: formData.get("terms") === "on",
     };
 
     try {
-      const { error } = await supabase.from("contact_struo").insert([data]);
+      const response = await fetch("/api/send-contact-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      if (error) {
-        console.error("Error submitting form:", error);
-        setError("Failed to submit your request. Please try again.");
-        setIsSubmitting(false);
-        return;
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to submit form");
       }
 
-      setIsSubmitted(true);
+      setFormSubmitted(true);
       (e.target as HTMLFormElement).reset();
-
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 5000);
     } catch (err) {
-      console.error("Unexpected error:", err);
-      setError("An unexpected error occurred. Please try again.");
+      console.error("Error submitting form:", err);
+      setError(
+        err instanceof Error
+          ? err.message
+          : "An unexpected error occurred. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -110,143 +107,208 @@ export default function Contact() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <div className="order-2 lg:order-1">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {error && <p className="text-red-500">{error}</p>}
-              <div>
-                <label
-                  htmlFor="name"
-                  className="block text-sm font-medium mb-2 text-foreground"
+            {formSubmitted ? (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex flex-col items-center justify-center py-12 text-center space-y-4"
+              >
+                <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center mb-4">
+                  <Check className="h-8 w-8 text-green-500" />
+                </div>
+                <h3 className="text-xl font-bold">Message Sent Successfully!</h3>
+                <p className="text-muted-foreground max-w-md">
+                  Thank you for reaching out. Our team will get back to you within 24 hours.
+                </p>
+                <Button
+                  className="mt-4"
+                  variant="outline"
+                  onClick={() => setFormSubmitted(false)}
                 >
-                  Full Name <span className="text-struo-red">*</span>
-                </label>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder="Enter your full name"
-                  required
-                  className="rounded-lg bg-background text-foreground border-border"
-                />
-              </div>
+                  Send Another Message
+                </Button>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {error && <p className="text-red-500">{error}</p>}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      htmlFor="name"
+                      className="block text-sm font-medium mb-2 text-foreground"
+                    >
+                      Full Name <span className="text-struo-red">*</span>
+                    </label>
+                    <Input
+                      id="name"
+                      name="name"
+                      placeholder="Enter your full name"
+                      required
+                      className="rounded-lg bg-background text-foreground border-border"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="email"
+                      className="block text-sm font-medium mb-2 text-foreground"
+                    >
+                      Email Address <span className="text-struo-red">*</span>
+                    </label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="Enter your email address"
+                      required
+                      className="rounded-lg bg-background text-foreground border-border"
+                    />
+                  </div>
+                </div>
 
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium mb-2 text-foreground"
-                >
-                  Email Address <span className="text-struo-red">*</span>
-                </label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter your email address"
-                  required
-                  className="rounded-lg bg-background text-foreground border-border"
-                />
-              </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-medium mb-2 text-foreground"
+                    >
+                      Phone Number
+                    </label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="+91 98765 43210"
+                      className="rounded-lg bg-background text-foreground border-border"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      htmlFor="company"
+                      className="block text-sm font-medium mb-2 text-foreground"
+                    >
+                      Company Name
+                    </label>
+                    <Input
+                      id="company"
+                      name="company"
+                      placeholder="Your Company Ltd."
+                      className="rounded-lg bg-background text-foreground border-border"
+                    />
+                  </div>
+                </div>
 
-              <div>
-                <label
-                  htmlFor="service"
-                  className="block text-sm font-medium mb-2 text-foreground"
-                >
-                  Service Required <span className="text-struo-red">*</span>
-                </label>
-                <select
-                  id="service"
-                  name="service"
-                  required
-                  defaultValue=""
-                  className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition text-foreground"
-                >
-                  <option value="" disabled>
-                    Select a service
-                  </option>
-                  <option value="steel-detailing">Structural Steel Detailing</option>
-                  <option value="peb">Pre-Engineered Building Detailing</option>
-                  <option value="connection-design">Connection Design</option>
-                  <option value="material-takeoff">Material Take-off (ABM)</option>
-                  <option value="bim">BIM Coordination</option>
-                  <option value="shop-drawings">Fabrication Shop Drawings</option>
-                  <option value="value-engineering">Value Engineering</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="block text-sm font-medium mb-2 text-foreground"
-                >
-                  Message <span className="text-struo-red">*</span>
-                </label>
-                <Textarea
-                  id="message"
-                  name="message"
-                  placeholder="Tell us about your project or inquiry"
-                  rows={5}
-                  required
-                  className="rounded-lg bg-background text-foreground border-border resize-none"
-                />
-              </div>
-
-              <div className="flex items-start">
-                <input
-                  id="terms"
-                  name="terms"
-                  type="checkbox"
-                  required
-                  className="mt-1 focus:ring-struo-red"
-                />
-                <label
-                  htmlFor="terms"
-                  className="ml-2 text-xs text-muted-foreground"
-                >
-                  I agree to the{" "}
-                  <a href="#" className="text-struo-red hover:underline">
-                    Terms & Conditions
-                  </a>{" "}
-                  and acknowledge that my information will be processed in
-                  accordance with the{" "}
-                  <a href="#" className="text-struo-red hover:underline">
-                    Privacy Policy
-                  </a>
-                  .
-                </label>
-              </div>
-
-              <div>
-                <MagneticButton>
-                  <Button
-                    type="submit"
-                    className="w-full rounded-lg group bg-struo-red hover:bg-struo-red/90 text-white"
-                    disabled={isSubmitting}
+                <div>
+                  <label
+                    htmlFor="service"
+                    className="block text-sm font-medium mb-2 text-foreground"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        Send Message
-                        <Send className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                      </>
-                    )}
-                  </Button>
-                </MagneticButton>
-
-                {isSubmitted && (
-                  <motion.p
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-green-500 text-sm mt-2"
+                    Service Required <span className="text-struo-red">*</span>
+                  </label>
+                  <select
+                    id="service"
+                    name="service"
+                    required
+                    defaultValue=""
+                    className="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-struo-red/50 transition text-foreground"
                   >
-                    Thank you! Your message has been sent successfully.
-                  </motion.p>
-                )}
-              </div>
-            </form>
+                    <option value="" disabled>
+                      Select a service
+                    </option>
+                    <option value="steel-detailing">Structural Steel Detailing</option>
+                    <option value="peb">Pre-Engineered Building Detailing</option>
+                    <option value="connection-design">Connection Design</option>
+                    <option value="material-takeoff">Material Take-off (ABM)</option>
+                    <option value="bim">BIM Coordination</option>
+                    <option value="shop-drawings">Fabrication Shop Drawings</option>
+                    <option value="value-engineering">Value Engineering</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="message"
+                    className="block text-sm font-medium mb-2 text-foreground"
+                  >
+                    Message <span className="text-struo-red">*</span>
+                  </label>
+                  <Textarea
+                    id="message"
+                    name="message"
+                    placeholder="Tell us about your project or inquiry"
+                    rows={5}
+                    required
+                    className="rounded-lg bg-background text-foreground border-border resize-none"
+                  />
+                </div>
+
+                <div className="flex items-start">
+                  <input
+                    id="terms"
+                    name="terms"
+                    type="checkbox"
+                    required
+                    className="mt-1 focus:ring-struo-red"
+                  />
+                  <label
+                    htmlFor="terms"
+                    className="ml-2 text-xs text-muted-foreground"
+                  >
+                    I agree to the{" "}
+                    <a href="#" className="text-struo-red hover:underline">
+                      Terms & Conditions
+                    </a>{" "}
+                    and acknowledge that my information will be processed in
+                    accordance with the{" "}
+                    <a href="#" className="text-struo-red hover:underline">
+                      Privacy Policy
+                    </a>
+                    .
+                  </label>
+                </div>
+
+                <div>
+                  <MagneticButton>
+                    <Button
+                      type="submit"
+                      className="w-full rounded-lg group bg-struo-red hover:bg-struo-red/90 text-white"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <svg
+                            className="animate-spin mr-2 h-4 w-4 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            ></circle>
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                          </svg>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          Send Message
+                          <Send className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                        </>
+                      )}
+                    </Button>
+                  </MagneticButton>
+                </div>
+              </form>
+            )}
           </div>
 
           <div className="order-1 lg:order-2">
@@ -274,49 +336,24 @@ export default function Contact() {
               <div className="mt-8">
                 <h4 className="font-medium mb-4 text-foreground">Follow Us</h4>
                 <div className="flex space-x-4">
-                  {["facebook", "twitter", "linkedin", "instagram"].map(
-                    (social) => {
-                      const IconComponent =
-                        socialIcons[social as keyof typeof socialIcons];
-                      return (
-                        <MagneticButton key={social} strength={50}>
-                          <a
-                            href={`https://${social}.com`}
-                            className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
-                          >
-                            <span className="sr-only">{social}</span>
-                            <IconComponent className="h-5 w-5 text-primary" />
-                          </a>
-                        </MagneticButton>
-                      );
-                    }
-                  )}
+                  {["linkedin"].map((social) => {
+                    const IconComponent =
+                      socialIcons[social as keyof typeof socialIcons];
+                    return (
+                      <MagneticButton key={social} strength={50}>
+                        <a
+                          href="https://www.linkedin.com/company/106694149/admin/dashboard/"
+                          target="_blank"
+                          className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors"
+                        >
+                          <span className="sr-only">{social}</span>
+                          <IconComponent className="h-5 w-5 text-primary" />
+                        </a>
+                      </MagneticButton>
+                    );
+                  })}
                 </div>
               </div>
-
-              {/* <div className="mt-8 pt-8 border-t border-border">
-                <h4 className="font-medium mb-4 text-foreground">
-                  Business Hours
-                </h4>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li className="flex justify-between">
-                    <span className="text-foreground">Monday - Friday:</span>
-                    <span className="text-muted-foreground">
-                      9:00 AM - 6:00 PM
-                    </span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span className="text-foreground">Saturday:</span>
-                    <span className="text-muted-foreground">
-                      10:00 AM - 4:00 PM
-                    </span>
-                  </li>
-                  <li className="flex justify-between">
-                    <span className="text-foreground">Sunday:</span>
-                    <span className="text-muted-foreground">Closed</span>
-                  </li>
-                </ul>
-              </div> */}
             </div>
           </div>
         </div>
