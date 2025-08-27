@@ -454,7 +454,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <div
+          {/* <div
             ref={mapRef}
             className={`mb-20 transition-all duration-700 ${mapInView ? "opacity-100" : "opacity-0"}`}
           >
@@ -469,7 +469,7 @@ export default function Contact() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div
             ref={faqRef}

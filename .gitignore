@@ -11,6 +11,7 @@
 !.yarn/versions
 /.next/
 .gitignore
+/.netlify/
 
 # testing
 /coverage
@@ -41,3 +42,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 .gitignore
+# Local Netlify folder
+.netlify
